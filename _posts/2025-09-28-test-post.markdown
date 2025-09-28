@@ -1,0 +1,10 @@
+---
+layout: post
+title:  "Test Post"
+date:   2025-09-28 17:57:01 +0900
+categories: jekyll update
+---
+
+This is a test page.
+
+내가 다시 이걸 만들게 될 줄이야
