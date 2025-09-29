@@ -1,8 +1,8 @@
 ---
 layout: post
-title:  "My First Page"
-date:   2025-09-28 17:57:01 +0900
-categories: jekyll update
+title:  "Marshmallow"
+date:   2025-09-29 17:00:00 +0900
+categories: dessert
 ---
 
 # 달콤하고 폭신한 즐거움, 마시멜로에 대하여
