@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "GDScript의 기초"
+title:  "GDScript Basic"
 date:   2025-09-30 20:00:00 +0900
 categories: godot
 ---
@@ -192,4 +192,5 @@ func _ready():
     health = 120 # 출력: Health changed to: 100
     health -= 50 # 출력: Health changed to: 50
     health -= 60 # 출력: Health changed to: 0, Player Died!
+
 ```
