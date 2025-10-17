@@ -101,10 +101,87 @@ Dictionary에도 사용 가능한데, 인스펙터에서 한 줄 공간이 아�
 @export_range(-8, 8, 2, "suffix:px") var target_offset
 ```
 
+## `@export_enum`
+
+주어진 값 중 하나만 선택 가능하도록 만든다. 선택된 값은 순서대로 0, 1, 2과 같이 숫자가 배정된다. `:` 을 이용하여 값을 지정할 수도 있으며, 값을 지정하지 않으면 `이전의 값 + 1` 을 사용한다
+
+enum을 직접 만들지 않고 사용하는 것이며, enum을 만들었다면 `@export` 를 사용하면 된다
+```
+@export_enum("Warrior", "Magician", "Thief") var character_class: int
+@export_enum("Slow:30", "Average:60", "Very Fast:200") var character_speed: int
+# A는 1, B는 10, C는 11, D는 12가 됨
+@export_enum("A", "B:10", "C", "D") var character_type: int
+
+@export_enum("Rebecca", "Mary", "Leah") var character_name: String
+@export_enum("Sword", "Spear", "Mace") var character_items: Array[int]
+@export_enum("double_jump", "climb", "dash") var character_skills: Array[String]
+```
+
 ## `@export_flags`
 
-int타입을 비트필드와 같이 사용한다면 `@export_flags` 로 각 비트를 선택하게 할 수 있다
+int타입을 비트필드로서 사용한다면 `@export_flags` 로 각 비트를 선택하게 할 수 있다. `:` 을 이용하여 값을 지정할 수 있으며, 이는 무조건 2의 승수여야 하고 `1 ~ 2^31-1` 범위의 값을 지정할 수 있다. 값을 일부분만 지정한 경우 `@export_enum` 와 다르게 이전의 값을 사용하지 않는다
 
 ```
 @export_flags("Fire", "Water", "Earth", "Wind") var spell_elements = 0
+@export_flags("Self:4", "Allies:8", "Foes:16") var spell_targets = 0
+
+# B는 2, C는 4가 됨
+@export_flags("A:16", "B", "C") var x
+```
+
+`@export_flags_2d_navigation`, `@export_flags_2d_physics`, `@export_flags_2d_render`, `@export_flags_3d_navigation`, `@export_flags_3d_physics`, `@export_flags_3d_render`, `@export_flags_avoidance` 과 같이 엔진에 존재하는 비트필드를 사용하는 어노테이션들도 존재하며, 이들은 프로젝트 설정에 따라 이름이 변경된다는 이점이 있다
+```
+@export_flags_2d_navigation var navigation_layers: int
+@export_flags_2d_navigation var navigation_layers_array: Array[int]
+```
+
+## `@export_tool_button`
+
+인스펙터에 버튼을 만들며, 버튼에 지정된 Text를 적어준다. 두 번째 매개변수로 아이콘을 넘겨줄 수 있으며, 아이콘을 지정하면 `Control.get_theme_icon()` 을 이용하여 아이콘을 불러온다
+
+```
+@tool
+extends Sprite2D
+
+@export_tool_button("Hello") var hello_action = hello
+@export_tool_button("Randomize the color!", "ColorRect")
+var randomize_color_action = randomize_color
+
+func hello():
+	print("Hello world!")
+
+func randomize_color():
+	var undo_redo = EditorInterface.get_editor_undo_redo()
+	undo_redo.create_action("Randomized Sprite2D Color")
+	undo_redo.add_do_property(self, &"self_modulate", Color(randf(), randf(), randf()))
+	undo_redo.add_undo_property(self, &"self_modulate", self_modulate)
+	undo_redo.commit_action()
+```
+
+# `@icon`
+
+현재 스크립트에 아이콘을 부여한다. 클래스 정의 나 상속문보다 위에 작성되어야 하기 때문에 보통 맨 윗줄에 작성한다
+```
+@icon("res://path/to/class/icon.svg")
+```
+# `@onready`
+
+`_ready()` 직전에 실행되며, 보통 초기값이 런타임에 결정되어야 하는 상황에 쓰인다
+
+```
+@onready var character_name = $Label
+
+@export var max_health = 1000
+@onready var health = max_health
+```
+
+# `@tool`
+
+현재 스크립트를 에디터에서 실행되게 만든다. 즉, 게임을 실행하지 않아도 실행되며 보통 커스텀 에디터 등을 만들때 사용한다. 클래스 정의/상속보다 위에 선언되어야 하므로 보통 맨 윗줄에 작성한다
+
+쓰임새는 [에디터에서 코드 실행하기](https://docs.godotengine.org/en/stable/tutorials/plugins/running_code_in_the_editor.html) 공식 문서를 참조한다
+
+```
+@tool
+extends Node
 ```
