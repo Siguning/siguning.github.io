@@ -2,7 +2,7 @@
 layout: post
 title:  "Computing System"
 date:   2024-05-03 17:00:00 +0900
-categories: dessert
+categories: cs
 ---
 
 이 글은 "The Elements of Computing Systems" 의 내용의 요약본이며, 자세한 내용을 학습하고 싶다면 해당 도서를 이용하는 것을 추천한다.
