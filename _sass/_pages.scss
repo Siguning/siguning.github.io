@@ -79,7 +79,7 @@
 .post-foot { margin-top: 56px; display: grid; gap: 32px; }
 
 .links-panel {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 20px;
   padding: 18px 20px;
   h2 { margin: 0 0 8px; }
   ul { list-style: none; margin: 0; padding: 0; }
@@ -100,7 +100,7 @@
   }
 }
 
-.related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+.related__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); gap: 14px; }
 .related__item {
   display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; color: var(--text);
   --bracket: var(--cat-line);
@@ -111,7 +111,7 @@
 .comments { padding: 18px 20px; }
 
 // ───── Categories page ─────
-.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; margin-bottom: 56px; }
+.cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(230px, 100%), 1fr)); gap: 16px; margin-bottom: 56px; }
 .cat-card {
   display: flex; flex-direction: column; gap: 4px;
   padding: 18px 20px 22px;
@@ -207,7 +207,7 @@
 }
 
 // ───── Series page ─────
-.series-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+.series-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 18px; }
 .series-card {
   padding: 20px 22px;
   --bracket: var(--cat-line);

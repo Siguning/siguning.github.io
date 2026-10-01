@@ -20,9 +20,11 @@
   &.is-hidden { transform: translateY(-100%); }
 
   &::after { // thin sweeping highlight along the bottom edge
-    content: ""; position: absolute; left: 0; bottom: -1px;
-    width: 160px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    // Full-width element animating background-position (not transform), so it never
+    // extends past the viewport and can't cause horizontal scrolling.
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent) no-repeat;
+    background-size: 160px 1px;
     animation: edge-sweep 7s ease-in-out infinite;
   }
   &__inner {
@@ -31,7 +33,7 @@
     display: flex; align-items: center; gap: 24px;
   }
 }
-@keyframes edge-sweep { 0% { transform: translateX(-200px); } 60%, 100% { transform: translateX(100vw); } }
+@keyframes edge-sweep { 0% { background-position: -200px 0; } 60%, 100% { background-position: calc(100% + 200px) 0; } }
 
 .read-progress {
   position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%;
@@ -149,6 +151,18 @@ kbd {
   }
 }
 
+// Very small phones (≤ 420px): compact header so it fits 320px screens.
+@media (max-width: 420px) {
+  .site-header__inner { gap: 10px; padding: 0 14px; }
+  .logo { gap: 7px; font-size: 0.82rem; letter-spacing: 0.06em; min-width: 0; }
+  .logo__mark svg { width: 26px; height: 26px; }
+  .logo__status { display: none; }
+  .header-actions { gap: 6px; }
+  .icon-btn, .search-trigger { width: 34px; height: 34px; }
+  .search-trigger { justify-content: center; padding: 0; }
+  .hero .stats { grid-template-columns: repeat(2, 1fr); }
+}
+
 // ───── Footer ─────
 .site-footer {
   border-top: 1px solid var(--line);
@@ -188,6 +202,7 @@ kbd {
   &__desc { max-width: 560px; color: var(--text-dim); font-size: 1.08rem; min-height: 3.5em; }
   &__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
   &__panel { padding: 28px; display: grid; gap: 24px; }
+  > * { min-width: 0; }
 
   @media (max-width: 860px) { grid-template-columns: 1fr; padding-top: 40px; }
 }
@@ -244,9 +259,9 @@ kbd {
 
 .post-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
   gap: 18px;
-  @media (max-width: 400px) { grid-template-columns: 1fr; }
+  > * { min-width: 0; }
 }
 
 .empty-state {
