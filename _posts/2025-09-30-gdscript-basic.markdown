@@ -12,7 +12,7 @@ series: "GDScript 입문"
 # 변수와 자료형
 
 ## 변수 선언과 타입 지정
-```
+```gdscript
 # var 변수명: 타입 = 초기값 의 형태로 선언한다
 var health: int = 100
 var speed: float = 300.0
@@ -23,14 +23,14 @@ var position: Vector2 = Vector2(100, 150)
 타입을 생략할 경우 동적 타이핑(Dynamic Typing) 이 되어 변수의 타입이 **실행 시점(Runtime)** 에 적용된다. 즉, 아무 타입의 값이나 넣을 수 있게 되는데, 이는 성능 저하와 잘못된 타입의 오류 가능성, 자동 완성 미지원 등의 문제로 언제나 타입을 적어 정적 타이핑(Static Typing) 을 하는 것을 권장한다
 
 만약 초기값을 통해 타입을 명확히 알 수 있다면, 엔진이 타입을 자동으로 추론하게 할 수도 있다
-```
+```gdscript
 # health_ratio는 float 타입으로 자동 지정됨
 var health_ratio := 1.0 
 # player_node는 get_node()가 반환하는 타입으로 자동 지정됨
 var player_node := get_node("Player")
 ```
 절대 바뀌지 않는 값은 `const` 키워드를 통해 상수로 선언한다
-```
+```gdscript
 const MAX_SPEED: int = 500
 const GRAVITY: float = 9.8
 ```
@@ -38,7 +38,7 @@ const GRAVITY: float = 9.8
 ## 배열
 
 순서가 있는 데이터의 모음으로, `[]`를 사용해 선언한다
-```
+```gdscript
 # 일반적인 배열 (어떤 타입이든 담을 수 있음)
 var inventory = ["Sword", 5, "Potion"]
 
@@ -53,7 +53,7 @@ print(score_list[0])
 ## 딕셔너리
 
 Key-Value 쌍으로 데이터를 저장하며, 순서가 없고 `{}` 를 사용해 선언한다
-```
+```gdscript
 var player_stats: Dictionary = {
     "name": "Godot",
     "hp": 100,
@@ -72,7 +72,7 @@ var a: Dictionary[String,  int]
 ## 열거형
 
 서로 연관된 상수를 하나의 그룹으로 묶어 코드의 가독성을 높이며, 주로 상태(State)를 관리할 때 유용하다
-```
+```gdscript
 # Player의 상태를 enum으로 정의
 enum State {IDLE, WALK, RUN, JUMP}
 
@@ -100,7 +100,7 @@ var day = MON
 # 흐름 제어
 
 ## 조건문
-```
+```gdscript
 var score: int = 85
 
 if score >= 90:
@@ -114,7 +114,7 @@ else:
 
 ### for 반복문
 배열이나 딕셔너리 같은 컬렉션의 각 항목을 순회하며 코드를 반복 실행한다. 숫자를 적어서 특정 숫자 범위를 반복할 수도 있다
-```
+```gdscript
 var fruits = ["Apple", "Banana", "Cherry"]
 for fruit in fruits:
     print(fruit)
@@ -125,7 +125,7 @@ for i in 5:
 ```
 ### while 반복문
 특정 조건이 true인 동안 코드를 계속해서 반복 실행한다
-```
+```gdscript
 var countdown: int = 3
 while countdown > 0:
     print(countdown)
@@ -135,7 +135,7 @@ print("Blast off!")
 ## match 문
 
 특정 변수의 값에 따라 다른 코드를 실행한다. `match 변수` 와 같이 사용하며, 밑의 값을 하나씩 검사하다 해당 변수의 값과 일치하는 값을 만나면 안의 코드를 실행한 후 종료한다
-```
+```gdscript
 enum PlayerState {IDLE, ATTACK, DODGE}
 var state: PlayerState = PlayerState.ATTACK
 
@@ -153,7 +153,7 @@ func _physics_process(delta):
 이 외에도 when 키워드로 추가 조건 확인 등이 가능하다
 
 # 함수
-```
+```gdscript
 # 반환값이 없는 함수 (void)
 func take_damage(amount: int) -> void:
     health -= amount
@@ -176,7 +176,7 @@ func _ready():
 ## 변수의 getter와 setter
 
 변수의 값을 읽거나(`get`) 쓸 때(`set`) 특정 함수를 자동으로 실행시킨다. 변수 값의 범위를 제한하거나, 값이 변경될 때 특정 효과를 발동시키는 등이 가능하며, 보통 체력바 업데이트 등에 사용한다
-```
+```gdscript
 var health: int:
     # `health` 값을 읽으려고 할 때 이 함수가 실행됨 (생략가능)
     get:
@@ -196,4 +196,3 @@ func _ready():
     health -= 60 # 출력: Health changed to: 0, Player Died!
 
 ```
-
