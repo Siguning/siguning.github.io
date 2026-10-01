@@ -1,0 +1,29 @@
+---
+layout: page
+title: Series
+kicker: CAMPAIGNS
+subtitle: 연재 강의와 개발 일지 묶음
+permalink: /series/
+wide: true
+plain: true
+---
+{%- if site.data.series.size > 0 %}
+<div class="series-grid">
+  {%- for s in site.data.series %}
+  {%- assign first = s[1] | first -%}
+  {%- assign last = s[1] | last -%}
+  {%- assign p_cat = first.categories | first -%}
+  <section class="series-card hud reveal" style="--h: {{ p_cat | hue }}">
+    <span class="hud-label">// {{ s[1].size }} EPISODES · {{ first.date | date: '%Y.%m' }} → {{ last.date | date: '%Y.%m' }}</span>
+    <h2>{{ s[0] }}</h2>
+    <ol>
+      {%- for post in s[1] %}
+      <li><a href="{{ post.url | relative_url }}">{{ post.title }}</a></li>
+      {%- endfor %}
+    </ol>
+  </section>
+  {%- endfor %}
+</div>
+{%- else %}
+<p class="empty-state">아직 시리즈가 없습니다. 글의 front matter에 <code>series: "시리즈 이름"</code>을 추가하면 자동으로 묶입니다.</p>
+{%- endif %}

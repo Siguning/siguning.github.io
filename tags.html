@@ -1,0 +1,48 @@
+---
+layout: page
+title: Tags
+kicker: SIGNAL FILTER
+subtitle: 태그를 여러 개 선택해 글을 걸러보세요.
+permalink: /tags/
+wide: true
+plain: true
+filters: true
+---
+{%- assign tags = site.tags | sort -%}
+<div class="tag-filter" data-tag-filter>
+  <div class="tag-filter__bar hud">
+    <div class="tag-filter__mode" role="radiogroup" aria-label="Match mode">
+      <button class="chip is-active" type="button" data-mode="or" role="radio" aria-checked="true">ANY (OR)</button>
+      <button class="chip" type="button" data-mode="and" role="radio" aria-checked="false">ALL (AND)</button>
+    </div>
+    <input class="tag-filter__find" type="search" placeholder="태그 찾기…" aria-label="Find tag" data-tag-find>
+    <button class="chip" type="button" data-tag-clear>Clear</button>
+  </div>
+
+  {%- if tags.size == 0 %}
+  <p class="empty-state">아직 태그가 없습니다. 글의 front matter에 <code>tags: [godot, devlog]</code> 처럼 추가하세요.</p>
+  {%- else %}
+  <div class="tag-cloud" role="group" aria-label="Tags">
+    {%- assign max = 1 -%}
+    {%- for tag in tags -%}{%- if tag[1].size > max -%}{%- assign max = tag[1].size -%}{%- endif -%}{%- endfor -%}
+    {%- for tag in tags -%}
+    <button class="tag tag--btn" type="button" data-tag="{{ tag[0] | escape }}" style="--w: {{ tag[1].size | times: 100 | divided_by: max }}" aria-pressed="false">
+      #{{ tag[0] }} <span class="tag__count">{{ tag[1].size }}</span>
+    </button>
+    {%- endfor -%}
+  </div>
+  {%- endif %}
+
+  <p class="hud-label tag-filter__status" data-tag-status aria-live="polite"></p>
+  <ul class="post-list" data-tag-results>
+    {%- for post in site.posts %}
+    {%- assign p_cat = post.categories | first -%}
+    <li data-tags="{{ post.tags | join: '|' | escape }}" style="--h: {{ p_cat | hue }}">
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {% include category-badge.html name=p_cat %}
+      {% include tag-list.html tags=post.tags %}
+    </li>
+    {%- endfor %}
+  </ul>
+</div>

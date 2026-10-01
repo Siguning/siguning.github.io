@@ -3,6 +3,8 @@ layout: post
 title:  "GDScript에서 원하는 노드 찾기"
 date:   2025-10-17 16:00:00 +0900
 categories: godot
+tags: [gdscript, godot4, scene-tree]
+series: "GDScript 입문"
 ---
 
 # 경로를 이용해 찾기

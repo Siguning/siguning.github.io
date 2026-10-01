@@ -3,6 +3,8 @@ layout: post
 title:  "GDScript 기초"
 date:   2025-09-30 19:00:00 +0900
 categories: godot
+tags: [gdscript, godot4, lecture-note]
+series: "GDScript 입문"
 ---
 
 더 자세한 내용은 고도엔진 공식문서를 참조한다 [GDScript reference](https://docs.godotengine.org/en/stable/tutorials/scripting/gdscript/gdscript_basics.html)

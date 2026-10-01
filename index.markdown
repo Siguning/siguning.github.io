@@ -1,4 +1,4 @@
 ---
-layout: blog
-title: Main
+layout: home
+title: Home
 ---

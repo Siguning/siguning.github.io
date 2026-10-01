@@ -1,0 +1,58 @@
+// Rouge token colors — "cockpit" palette for dark, deep inks for light.
+:root {
+  --sx-text: #d2e2f4;
+  --sx-comment: #5f7a98;
+  --sx-keyword: #4fb6ff;
+  --sx-type: #5ee6d6;
+  --sx-func: #b4a4ff;
+  --sx-string: #ffc47e;
+  --sx-number: #ff9a6b;
+  --sx-const: #ff8fb8;
+  --sx-attr: #8fd3ff;
+  --sx-op: #9fb8d4;
+  --sx-preproc: #c78bff;
+  --sx-error: #ff6b7a;
+}
+@mixin sx-light {
+  --sx-text: #13253b;
+  --sx-comment: #7a8ea6;
+  --sx-keyword: #0b5fd1;
+  --sx-type: #00807a;
+  --sx-func: #5b3cc4;
+  --sx-string: #a65b00;
+  --sx-number: #c2410c;
+  --sx-const: #b4236a;
+  --sx-attr: #0b74a8;
+  --sx-op: #4c6585;
+  --sx-preproc: #8b2fc9;
+  --sx-error: #d02a3e;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme]) { @include sx-light; } }
+:root[data-theme="light"] { @include sx-light; }
+
+.highlight {
+  color: var(--sx-text);
+  .c, .ch, .cm, .c1, .cs, .cd { color: var(--sx-comment); font-style: italic; }
+  .cp, .cpf { color: var(--sx-preproc); }
+  .k, .kd, .kn, .kr, .kv { color: var(--sx-keyword); }
+  .kc { color: var(--sx-const); }
+  .kp { color: var(--sx-keyword); }
+  .kt, .nc, .nn { color: var(--sx-type); }
+  .nf, .fm, .nx { color: var(--sx-func); }
+  .nb, .bp { color: var(--sx-type); }
+  .na, .nt, .py { color: var(--sx-attr); }
+  .no, .nd, .ne, .nl { color: var(--sx-const); }
+  .nv, .vc, .vg, .vi, .vm { color: var(--sx-attr); }
+  .s, .s1, .s2, .sb, .sc, .sd, .sh, .sx, .sa, .dl { color: var(--sx-string); }
+  .se, .si, .ss, .sr { color: var(--sx-const); }
+  .m, .mi, .mf, .mh, .mo, .mb, .il, .mx { color: var(--sx-number); }
+  .o, .ow, .p { color: var(--sx-op); }
+  .ow { font-weight: 600; }
+  .err { color: var(--sx-error); }
+  .gd { color: var(--sx-error); background: color-mix(in srgb, var(--sx-error) 12%, transparent); }
+  .gi { color: #4fe3b0; background: rgba(79, 227, 176, 0.1); }
+  .gh, .gu { color: var(--sx-keyword); font-weight: 700; }
+  .ge { font-style: italic; }
+  .gs { font-weight: 700; }
+  .w { color: inherit; }
+}

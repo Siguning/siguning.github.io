@@ -1,0 +1,210 @@
+@use "sass:math";
+@use "sass:string";
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--header-h) + 16px);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 16.5px;
+  line-height: 1.75;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s var(--ease), color 0.4s var(--ease);
+}
+
+img, svg, video { max-width: 100%; }
+a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--accent-2); }
+button, input { font: inherit; color: inherit; }
+::selection { background: var(--accent); color: var(--accent-ink); }
+
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.icon {
+  width: 1.1em; height: 1.1em;
+  flex: none;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+  vertical-align: -0.18em;
+}
+
+.skip-link {
+  position: absolute; left: 12px; top: -60px; z-index: 100;
+  padding: 8px 14px; background: var(--accent); color: var(--accent-ink);
+  &:focus { top: 12px; }
+}
+
+// Monospace uppercase label used throughout the HUD.
+.hud-label {
+  display: inline-flex; align-items: center; gap: 0.4em;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  line-height: 1.4;
+}
+
+// ───── HUD panel: translucent, chamfered corner, animated corner brackets ─────
+.hud {
+  --bracket: var(--line-strong);
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, var(--cut) 100%, 0 calc(100% - var(--cut)));
+  transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease), transform 0.35s var(--ease), box-shadow 0.3s;
+
+  // Corner brackets (top-left / bottom-right) + chamfer edge lines.
+  &::before {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(var(--bracket), var(--bracket)) top left / 16px 1px no-repeat,
+      linear-gradient(var(--bracket), var(--bracket)) top left / 1px 16px no-repeat,
+      linear-gradient(var(--bracket), var(--bracket)) bottom right / 16px 1px no-repeat,
+      linear-gradient(var(--bracket), var(--bracket)) bottom right / 1px 16px no-repeat,
+      linear-gradient(225deg, transparent calc(var(--cut) * 0.7 - 1px), var(--bracket) calc(var(--cut) * 0.7 - 1px), var(--bracket) calc(var(--cut) * 0.7), transparent calc(var(--cut) * 0.7)) top right / var(--cut) var(--cut) no-repeat,
+      linear-gradient(45deg, transparent calc(var(--cut) * 0.7 - 1px), var(--bracket) calc(var(--cut) * 0.7 - 1px), var(--bracket) calc(var(--cut) * 0.7), transparent calc(var(--cut) * 0.7)) bottom left / var(--cut) var(--cut) no-repeat;
+    transition: background-size 0.4s var(--ease);
+  }
+}
+
+// ───── Animated space background ─────
+@function stars($n, $spread: 2000) {
+  $value: "#{math.random($spread)}px #{math.random($spread)}px var(--star)";
+  @for $i from 2 through $n {
+    $value: "#{$value}, #{math.random($spread)}px #{math.random($spread)}px var(--star)";
+  }
+  @return string.unquote($value);
+}
+
+.bg {
+  position: fixed; inset: 0; z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+
+  &__grid {
+    position: absolute; inset: -80px;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 30%, transparent 75%);
+    animation: grid-drift 40s linear infinite;
+  }
+
+  &__glow {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(60vw 40vw at 85% -10%, rgba(30, 120, 255, 0.18), transparent 60%),
+      radial-gradient(50vw 35vw at -10% 30%, rgba(0, 200, 255, 0.08), transparent 60%),
+      radial-gradient(40vw 30vw at 60% 110%, rgba(40, 80, 255, 0.10), transparent 60%);
+  }
+
+  &__stars {
+    position: absolute; top: 0; left: 0;
+    width: 1px; height: 1px; border-radius: 50%;
+    background: transparent;
+    &::after {
+      content: ""; position: absolute; top: 2000px;
+      width: inherit; height: inherit; border-radius: inherit;
+      box-shadow: inherit;
+    }
+    &--1 { box-shadow: stars(320); animation: star-drift 180s linear infinite; opacity: 0.55; }
+    &--2 { width: 2px; height: 2px; box-shadow: stars(120); animation: star-drift 120s linear infinite; opacity: 0.6; }
+    &--3 { width: 2px; height: 2px; box-shadow: stars(40); animation: star-drift 80s linear infinite, twinkle 4s ease-in-out infinite alternate; }
+  }
+
+  &__scan {
+    position: absolute; left: 0; right: 0; top: -20%;
+    height: 20%;
+    background: linear-gradient(to bottom, transparent, rgba(63, 180, 255, 0.035), transparent);
+    animation: scan 9s linear infinite;
+  }
+}
+
+:root[data-theme="light"] .bg {
+  &__stars, &__scan { display: none; }
+  &__glow {
+    background:
+      radial-gradient(60vw 40vw at 85% -10%, rgba(30, 120, 255, 0.12), transparent 60%),
+      radial-gradient(50vw 35vw at -10% 30%, rgba(0, 170, 255, 0.07), transparent 60%);
+  }
+}
+
+@keyframes star-drift { to { transform: translateY(-2000px); } }
+@keyframes twinkle { from { opacity: 0.3; } to { opacity: 1; } }
+@keyframes grid-drift { to { transform: translate(64px, 64px); } }
+@keyframes scan { to { transform: translateY(700%); } }
+
+// ───── Scroll reveal (activated by main.js adding .is-visible) ─────
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition-delay: var(--delay, 0s);
+  &.is-visible { opacity: 1; transform: none; }
+}
+
+// ───── Glitch text (hover / on load) ─────
+.glitch {
+  position: relative;
+  display: inline-block;
+  &::before, &::after {
+    content: attr(data-text);
+    position: absolute; inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+  &::before { color: #00e5ff; }
+  &::after { color: #4b6bff; }
+  &:hover::before, .is-glitching &::before, &.is-glitching::before { animation: glitch-a 0.5s steps(2) 1; }
+  &:hover::after, .is-glitching &::after, &.is-glitching::after { animation: glitch-b 0.5s steps(2) 1; }
+}
+@keyframes glitch-a {
+  0% { opacity: 0.8; clip-path: inset(10% 0 60% 0); transform: translate(-3px, -1px); }
+  33% { clip-path: inset(50% 0 20% 0); transform: translate(3px, 1px); }
+  66% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 0); }
+  100% { opacity: 0; }
+}
+@keyframes glitch-b {
+  0% { opacity: 0.8; clip-path: inset(70% 0 10% 0); transform: translate(3px, 1px); }
+  33% { clip-path: inset(20% 0 50% 0); transform: translate(-3px, -1px); }
+  66% { clip-path: inset(5% 0 80% 0); transform: translate(2px, 0); }
+  100% { opacity: 0; }
+}
+
+// Theme switch: circular wipe from the toggle button (View Transitions API).
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) { animation: theme-wipe 0.65s var(--ease); }
+@keyframes theme-wipe {
+  from { clip-path: circle(0 at var(--vt-x, 50%) var(--vt-y, 0)); }
+  to { clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .js .reveal { opacity: 1; transform: none; }
+}

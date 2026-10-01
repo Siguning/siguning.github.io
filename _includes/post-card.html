@@ -1,0 +1,14 @@
+{%- assign p = include.post -%}
+{%- assign p_cat = p.categories | first -%}
+<article class="post-card hud reveal" data-category="{{ p_cat }}" data-tags="{{ p.tags | join: ' ' | escape }}" style="--h: {{ p_cat | hue }}">
+  <a class="post-card__link" href="{{ p.url | relative_url }}" aria-label="{{ p.title | escape }}"></a>
+  <header class="post-card__meta">
+    {% include category-badge.html name=p_cat %}
+    <time datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: '%Y.%m.%d' }}</time>
+    <span class="post-card__rt"><svg class="icon"><use href="#i-clock"/></svg>{% include reading-time.html content=p.content %}m</span>
+  </header>
+  <h3 class="post-card__title">{% if p.pinned %}<span class="pin" title="Pinned">◆</span> {% endif %}{{ p.title }}</h3>
+  {%- if p.series %}<p class="post-card__series"><svg class="icon"><use href="#i-layers"/></svg>{{ p.series }}{% if p.series_index %} · EP.{{ p.series_index }}{% endif %}</p>{% endif %}
+  <p class="post-card__excerpt">{{ p.description | default: p.content | strip_html | normalize_whitespace | truncate: 150 }}</p>
+  {% include tag-list.html tags=p.tags %}
+</article>

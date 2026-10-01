@@ -1,56 +1,47 @@
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{{site.title}} | {{page.title}}</title>
-  {% if page.layout == "post" %}
-  <link rel="stylesheet" href="{{site.baseurl}}/assets/css/post.css" />
-  <link rel="stylesheet" href="{{site.baseurl}}/assets/css/syntax.css" />
-  {% else %}
-  <link rel="stylesheet" href="{{site.baseurl}}/assets/css/blog.css" />
-  {%endif%}
-  <link rel="stylesheet" href="{{site.baseurl}}/assets/css/common.css" />
-  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" />
-  <link rel="stylesheet" href="{{ '/assets/css/pretendard.css' | relative_url }}">
-  <script src="{{site.baseurl}}/assets/js/categories.js"></script>
-  <script src="{{site.baseurl}}/assets/js/copy-code.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
   <script>
-    const currentTheme = localStorage.getItem("theme");
-    if (currentTheme) {
-      document.documentElement.setAttribute(
-        "data-theme",
-        localStorage.getItem("theme")
-      );
-    }
+    /* Apply the saved/system theme before first paint to avoid a flash. */
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") {
+        t = window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+      document.documentElement.classList.add("js");
+    })();
   </script>
-  {% if page.layout == "post" %}
-  <script defer src="{{site.baseurl}}/assets/js/lbox.js"></script>
-  {% endif %}
+  <meta name="theme-color" content="#04070d" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#eef3f9" media="(prefers-color-scheme: light)">
+  {% seo %}
+  {% feed_meta %}
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/img/favicon.svg' | relative_url }}">
 
-  <!-- MathJax Configuration -->
-  <script type="text/javascript">
-    window.MathJax = {
-      tex: {
-        inlineMath: [
-          ["$", "$"],
-          ["\\(", "\\)"],
-        ],
-        displayMath: [
-          ["$$", "$$"],
-          ["\\[", "\\]"],
-        ],
-        processEscapes: true,
-      },
-      svg: {
-        fontCache: "global",
-      },
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap">
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+
+  <script>
+    window.SITE = {
+      baseurl: {{ site.baseurl | default: '' | jsonify }},
+      search: {{ '/search.json' | relative_url | jsonify }},
+      graph: {{ '/assets/data/graph.json' | relative_url | jsonify }}
     };
   </script>
-  <script
-    type="text/javascript"
-    id="MathJax-script"
-    async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
-  ></script>
-  <meta name="google-site-verification" content="1NV22aSAQUAAGcC5e99w3DPpyJzvm5vVkswxqZWppk8" />
+  <script defer src="{{ '/assets/js/main.js' | relative_url }}"></script>
+  <script defer src="{{ '/assets/js/search.js' | relative_url }}"></script>
+  {% if page.layout == 'post' or page.graph %}
+  <script defer src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script defer src="{{ '/assets/js/graph.js' | relative_url }}"></script>
+  {% endif %}
+  {% if page.filters %}
+  <script defer src="{{ '/assets/js/filters.js' | relative_url }}"></script>
+  {% endif %}
+
+  <meta name="google-site-verification" content="1NV22aSAQUAAGcC5e99w3DPpyJzvm5vVkswxqZWppk8">
 </head>

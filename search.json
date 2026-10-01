@@ -1,0 +1,21 @@
+---
+layout: null
+sitemap: false
+---
+{%- assign searchable = site.posts | where_exp: "p", "p.hidden != true" | where_exp: "p", "p.search != false" -%}
+[
+{%- for post in searchable -%}
+  {%- assign p_cat = post.categories | first -%}
+  {
+    "title": {{ post.title | jsonify }},
+    "url": {{ post.url | relative_url | jsonify }},
+    "date": {{ post.date | date: '%Y.%m.%d' | jsonify }},
+    "category": {{ p_cat | jsonify }},
+    "categoryName": {{ site.data.categories[p_cat].name | default: p_cat | jsonify }},
+    "hue": {{ p_cat | hue }},
+    "tags": {{ post.tags | jsonify }},
+    "series": {{ post.series | jsonify }},
+    "content": {{ post.content | strip_html | normalize_whitespace | jsonify }}
+  }{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

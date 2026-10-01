@@ -1,0 +1,19 @@
+<div class="search" data-search hidden>
+  <div class="search__backdrop" data-search-close></div>
+  <div class="search__panel hud" role="dialog" aria-modal="true" aria-label="Search">
+    <div class="search__bar">
+      <svg class="icon"><use href="#i-search"/></svg>
+      <input class="search__input" type="search" placeholder="검색… (#tag  @category 로 필터)" autocomplete="off" spellcheck="false" aria-label="Search query" aria-controls="search-results">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="search__status hud-label" aria-live="polite"></div>
+    <ol class="search__results" id="search-results" role="listbox"></ol>
+    <div class="search__hint">
+      <span><kbd>↑</kbd><kbd>↓</kbd> 이동</span>
+      <span><kbd>Enter</kbd> 열기</span>
+      <span><kbd>#</kbd> 태그</span>
+      <span><kbd>@</kbd> 카테고리</span>
+      <span class="search__engine">FUZZY // fuse.js</span>
+    </div>
+  </div>
+</div>

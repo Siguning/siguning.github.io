@@ -1,0 +1,35 @@
+# Display metadata for categories (front matter `categories:` value → info).
+# Unknown categories still work; they just fall back to the raw name.
+# `hue` is optional (190–235 keeps it blue); without it a stable hue is derived from the name.
+godot:
+  name: Godot
+  description: Godot 엔진과 GDScript
+  icon: engine
+devlog:
+  name: Devlog
+  description: 게임 개발 일지
+  icon: log
+lecture:
+  name: Lecture
+  description: 알고리즘 · 기술 · 게임 개발 강의
+  icon: book
+algorithm:
+  name: Algorithm
+  description: 자료구조와 알고리즘
+  icon: chip
+lang:
+  name: Languages
+  description: 프로그래밍 언어 강의북
+  icon: code
+cs:
+  name: Computer Science
+  description: 컴퓨터 과학 기초
+  icon: chip
+game-design:
+  name: Game Design
+  description: 게임 디자인 이론
+  icon: spark
+dessert:
+  name: Dessert
+  description: 기타 등등
+  icon: spark

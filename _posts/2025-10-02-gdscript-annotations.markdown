@@ -3,6 +3,8 @@ layout: post
 title:  "GDScript 어노테이션"
 date:   2025-10-02 20:00:00 +0900
 categories: godot
+tags: [gdscript, godot4, annotation]
+series: "GDScript 입문"
 ---
 
 [모든 어노테이션 정보](https://docs.godotengine.org/en/stable/classes/class_@gdscript.html)
