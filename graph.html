@@ -1,0 +1,25 @@
+---
+layout: page
+title: Knowledge Graph
+kicker: STAR MAP
+subtitle: 글 사이의 링크([[위키 링크]]), 카테고리, 태그로 이어진 지도. 드래그·줌·클릭할 수 있습니다.
+permalink: /graph/
+wide: true
+plain: true
+graph: true
+---
+<div class="graph-view hud">
+  <div class="graph-view__controls">
+    <label class="switch"><input type="checkbox" data-graph-toggle="category" checked><span></span>Categories</label>
+    <label class="switch"><input type="checkbox" data-graph-toggle="tag" checked><span></span>Tags</label>
+    <label class="switch"><input type="checkbox" data-graph-toggle="labels" checked><span></span>Labels</label>
+    <input class="graph-view__find" type="search" placeholder="노드 찾기…" aria-label="Highlight nodes" data-graph-find>
+  </div>
+  <div class="graph-view__canvas" data-graph="full"></div>
+  <div class="graph-view__legend hud-label">
+    <span><i class="lg lg--post"></i>Post</span>
+    <span><i class="lg lg--category"></i>Category</span>
+    <span><i class="lg lg--tag"></i>Tag</span>
+    <span><i class="lg lg--link"></i>Wiki link</span>
+  </div>
+</div>

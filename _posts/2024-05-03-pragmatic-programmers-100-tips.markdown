@@ -3,6 +3,7 @@ layout: post
 title:  "Pragmatic Programmer's 100 Tips"
 date:   2024-05-03 15:00:00 +0900
 categories: cs
+tags: [book, software-engineering]
 ---
 
 ## 1. 자신의 기예craft 에 관심을 가져라.

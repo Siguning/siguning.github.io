@@ -1,0 +1,8 @@
+{%- comment -%} Usage: {% include category-badge.html name="godot" %} {%- endcomment -%}
+{%- assign cat_name = include.name | default: '' -%}
+{%- if cat_name != '' -%}
+{%- assign cat = site.data.categories[cat_name] -%}
+<a class="cat-badge" href="{{ '/categories/' | relative_url }}#{{ cat_name | uri_escape }}" style="--h: {{ cat_name | hue }}">
+  <span class="cat-badge__dot" aria-hidden="true"></span>{{ cat.name | default: cat_name }}
+</a>
+{%- endif -%}

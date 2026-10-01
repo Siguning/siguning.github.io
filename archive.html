@@ -1,0 +1,26 @@
+---
+layout: page
+title: Archive
+kicker: MISSION LOG
+subtitle: 모든 글을 시간순으로
+permalink: /archive/
+plain: true
+---
+{%- assign years = site.posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
+<div class="timeline">
+  {%- for year in years %}
+  <section class="timeline__year reveal">
+    <h2 class="timeline__label"><span>{{ year.name }}</span><small>{{ year.items.size }} logs</small></h2>
+    <ol>
+      {%- for post in year.items %}
+      {%- assign p_cat = post.categories | first -%}
+      <li class="timeline__item" style="--h: {{ p_cat | hue }}">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%m.%d' }}</time>
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+        {% include category-badge.html name=p_cat %}
+      </li>
+      {%- endfor %}
+    </ol>
+  </section>
+  {%- endfor %}
+</div>

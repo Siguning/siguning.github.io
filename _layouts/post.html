@@ -1,0 +1,122 @@
+---
+layout: default
+---
+{%- assign p_cat = page.categories | first -%}
+<article class="post" style="--h: {{ p_cat | hue }}" data-post="{{ page.url }}">
+  <header class="post-head container">
+    <nav class="breadcrumb hud-label reveal" aria-label="Breadcrumb">
+      <a href="{{ '/' | relative_url }}">HOME</a><span>/</span>
+      <a href="{{ '/categories/' | relative_url }}#{{ p_cat | uri_escape }}">{{ site.data.categories[p_cat].name | default: p_cat | upcase }}</a><span>/</span>
+      <span aria-current="page">LOG-{{ page.date | date: '%y%m%d' }}</span>
+    </nav>
+    <h1 class="post-head__title reveal">{{ page.title }}</h1>
+    {%- if page.subtitle %}<p class="post-head__sub reveal">{{ page.subtitle }}</p>{% endif %}
+    <div class="post-meta reveal">
+      {% include category-badge.html name=p_cat %}
+      <span><svg class="icon"><use href="#i-cal"/></svg><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: '%Y.%m.%d' }}</time></span>
+      {%- if page.last_modified_at %}
+      <span title="Last updated"><svg class="icon"><use href="#i-clock"/></svg>수정 {{ page.last_modified_at | date: '%Y.%m.%d' }}</span>
+      {%- endif %}
+      <span><svg class="icon"><use href="#i-clock"/></svg>{% include reading-time.html content=content %}분 분량</span>
+    </div>
+    {% include tag-list.html tags=page.tags %}
+  </header>
+
+  {%- if page.cover %}
+  <figure class="post-cover container reveal">
+    <img src="{{ page.cover | relative_url }}" alt="{{ page.cover_alt | default: page.title | escape }}">
+  </figure>
+  {%- endif %}
+
+  <div class="post-layout container">
+    <div class="post-main">
+      {%- if page.series_posts %}
+      <details class="series-box hud" {% if page.series_posts.size <= 6 %}open{% endif %}>
+        <summary>
+          <span class="hud-label">// SERIES · {{ page.series_index }} / {{ page.series_posts.size }}</span>
+          <strong>{{ page.series }}</strong>
+        </summary>
+        <ol>
+          {%- for s in page.series_posts %}
+          <li{% if s.url == page.url %} class="is-current"{% endif %}><a href="{{ s.url | relative_url }}">{{ s.title }}</a></li>
+          {%- endfor %}
+        </ol>
+      </details>
+      {%- endif %}
+
+      <details class="toc-mobile hud" data-toc-mobile hidden>
+        <summary class="hud-label">// 목차 (Contents)</summary>
+        <nav data-toc-target></nav>
+      </details>
+
+      <div class="prose" data-prose{% if page.math %} data-math{% endif %}{% if page.toc == false %} data-no-toc{% endif %}>
+        {{ content }}
+      </div>
+
+      <footer class="post-foot">
+        {%- if page.backlinks.size > 0 or page.outlinks.size > 0 %}
+        <section class="links-panel hud">
+          {%- if page.backlinks.size > 0 %}
+          <div>
+            <h2 class="hud-label">// BACKLINKS · {{ page.backlinks.size }}</h2>
+            <ul>{% for l in page.backlinks %}<li><a href="{{ l.url | relative_url }}"><svg class="icon"><use href="#i-arrow-left"/></svg>{{ l.title }}</a></li>{% endfor %}</ul>
+          </div>
+          {%- endif %}
+          {%- if page.outlinks.size > 0 %}
+          <div>
+            <h2 class="hud-label">// OUTGOING LINKS · {{ page.outlinks.size }}</h2>
+            <ul>{% for l in page.outlinks %}<li><a href="{{ l.url | relative_url }}"><svg class="icon"><use href="#i-arrow-right"/></svg>{{ l.title }}</a></li>{% endfor %}</ul>
+          </div>
+          {%- endif %}
+        </section>
+        {%- endif %}
+
+        <nav class="pager" aria-label="Previous and next post">
+          {%- if page.previous %}
+          <a class="pager__item hud" href="{{ page.previous.url | relative_url }}" rel="prev">
+            <span class="hud-label"><svg class="icon"><use href="#i-arrow-left"/></svg> PREV</span>
+            <strong>{{ page.previous.title }}</strong>
+          </a>
+          {%- else %}<span></span>{% endif %}
+          {%- if page.next %}
+          <a class="pager__item pager__item--next hud" href="{{ page.next.url | relative_url }}" rel="next">
+            <span class="hud-label">NEXT <svg class="icon"><use href="#i-arrow-right"/></svg></span>
+            <strong>{{ page.next.title }}</strong>
+          </a>
+          {%- endif %}
+        </nav>
+
+        {%- if page.related.size > 0 %}
+        <section class="related">
+          <h2 class="section-title"><span class="hud-label">// RELATED SIGNALS</span>관련 글</h2>
+          <div class="related__grid">
+            {%- for r in page.related %}
+            <a class="related__item hud" href="{{ r.url | relative_url }}" style="--h: {{ r.category | hue }}">
+              <span class="hud-label">{{ site.data.categories[r.category].name | default: r.category }} · {{ r.date | date: '%Y.%m.%d' }}</span>
+              <strong>{{ r.title }}</strong>
+            </a>
+            {%- endfor %}
+          </div>
+        </section>
+        {%- endif %}
+
+        {%- if page.comments != false and site.giscus.repo_id != "" %}
+        {% include giscus.html %}
+        {%- endif %}
+      </footer>
+    </div>
+
+    <aside class="post-aside" aria-label="Post navigation">
+      <div class="post-aside__sticky">
+        <section class="aside-panel hud" data-toc-panel hidden>
+          <h2 class="hud-label">// CONTENTS</h2>
+          <nav class="toc" data-toc></nav>
+        </section>
+        <section class="aside-panel hud">
+          <h2 class="hud-label">// LOCAL GRAPH <a class="aside-panel__more" href="{{ '/graph/' | relative_url }}">expand ↗</a></h2>
+          <div class="local-graph" data-graph="local" data-focus="{{ page.url }}"></div>
+        </section>
+      </div>
+    </aside>
+  </div>
+</article>

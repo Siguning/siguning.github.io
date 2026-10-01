@@ -1,0 +1,69 @@
+---
+layout: default
+filters: true
+---
+{%- assign posts = site.posts | where_exp: "p", "p.hidden != true" -%}
+{%- assign pinned = posts | where: "pinned", true -%}
+
+<section class="hero container">
+  <div class="hero__copy">
+    <span class="hud-label reveal">// SYSTEM ONLINE · {{ site.tagline | upcase }}</span>
+    <h1 class="hero__title reveal">
+      {%- assign words = site.title | split: ' ' -%}
+      <span class="glitch" data-text="{{ words | first }}">{{ words | first }}</span>
+      <span class="hero__title-accent">{{ words | shift | join: ' ' }}</span>
+    </h1>
+    <p class="hero__desc reveal" data-typewriter>{{ site.description }}</p>
+    <div class="hero__actions reveal">
+      <a class="btn btn--primary" href="{{ '/archive/' | relative_url }}"><svg class="icon"><use href="#i-list"/></svg>All Posts</a>
+      <a class="btn" href="{{ '/graph/' | relative_url }}"><svg class="icon"><use href="#i-graph"/></svg>Knowledge Graph</a>
+      <button class="btn" type="button" data-search-open><svg class="icon"><use href="#i-search"/></svg>Search</button>
+    </div>
+  </div>
+
+  <div class="hero__panel hud reveal" aria-label="Site statistics">
+    <div class="radar" aria-hidden="true"><span class="radar__sweep"></span>
+      {%- for p in posts limit: 12 -%}
+      {%- assign p_cat = p.categories | first -%}
+      <span class="radar__blip" style="--h: {{ p_cat | hue }}; --a: {{ forloop.index | times: 137 }}deg; --r: {{ forloop.index | times: 7 | modulo: 34 | plus: 10 }}"></span>
+      {%- endfor -%}
+    </div>
+    <dl class="stats">
+      <div><dt>Posts</dt><dd data-count="{{ posts.size }}">{{ posts.size }}</dd></div>
+      <div><dt>Categories</dt><dd data-count="{{ site.categories.size }}">{{ site.categories.size }}</dd></div>
+      <div><dt>Tags</dt><dd data-count="{{ site.tags.size }}">{{ site.tags.size }}</dd></div>
+      <div><dt>Series</dt><dd data-count="{{ site.data.series.size | default: 0 }}">{{ site.data.series.size | default: 0 }}</dd></div>
+    </dl>
+  </div>
+</section>
+
+{%- if pinned.size > 0 %}
+<section class="container section">
+  <h2 class="section-title"><span class="hud-label">// PRIORITY</span>Pinned</h2>
+  <div class="post-grid">
+    {%- for post in pinned %}{% include post-card.html post=post %}{% endfor -%}
+  </div>
+</section>
+{%- endif %}
+
+<section class="container section" data-post-filter>
+  <div class="section-head">
+    <h2 class="section-title"><span class="hud-label">// TRANSMISSIONS</span>Latest Posts</h2>
+    <div class="chip-row" role="group" aria-label="Filter by category">
+      <button class="chip is-active" type="button" data-filter-cat="">All <span class="chip__count">{{ posts.size }}</span></button>
+      {%- assign cats = site.categories | sort -%}
+      {%- for cat in cats -%}
+      {%- assign cat_key = cat[0] -%}{%- assign info = site.data.categories[cat_key] -%}
+      <button class="chip" type="button" data-filter-cat="{{ cat[0] }}" style="--h: {{ cat[0] | hue }}">
+        <span class="chip__dot" aria-hidden="true"></span>{{ info.name | default: cat[0] }} <span class="chip__count">{{ cat[1].size }}</span>
+      </button>
+      {%- endfor -%}
+    </div>
+  </div>
+  <div class="post-grid" data-filter-list>
+    {%- for post in posts %}{% include post-card.html post=post %}{% endfor -%}
+  </div>
+  <p class="empty-state" data-filter-empty hidden>신호 없음 — 해당 조건의 글이 없습니다.</p>
+</section>
+
+{{ content }}

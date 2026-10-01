@@ -1,0 +1,39 @@
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="logo" href="{{ '/' | relative_url }}" aria-label="{{ site.title }} home">
+      <span class="logo__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32"><path d="M16 2 29 9.5v13L16 30 3 22.5v-13z"/><path d="M16 9v14M10 12.5l6 3.5 6-3.5"/></svg>
+      </span>
+      {%- assign words = site.title | split: ' ' -%}
+      <span class="logo__text">{{ words | first }}<span class="logo__sep">//</span>{{ words | shift | join: ' ' }}</span>
+      <span class="logo__status" aria-hidden="true"></span>
+    </a>
+
+    <nav class="nav" id="site-nav" aria-label="Main">
+      {%- for item in site.nav -%}
+        {%- assign item_url = item.url | relative_url -%}
+        {%- assign active = false -%}
+        {%- if page.url == item.url or page.url contains item.url -%}{%- assign active = true -%}{%- endif -%}
+        <a class="nav__link{% if active %} is-active{% endif %}" href="{{ item_url }}"{% if active %} aria-current="page"{% endif %}>
+          <span class="nav__index">0{{ forloop.index }}</span>{{ item.title }}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    <div class="header-actions">
+      <button class="search-trigger" type="button" data-search-open aria-label="Search (Ctrl+K)">
+        <svg class="icon"><use href="#i-search"/></svg>
+        <span class="search-trigger__label">Search</span>
+        <kbd class="search-trigger__kbd">Ctrl K</kbd>
+      </button>
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle light/dark theme">
+        <svg class="icon icon--sun"><use href="#i-sun"/></svg>
+        <svg class="icon icon--moon"><use href="#i-moon"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" type="button" data-nav-toggle aria-controls="site-nav" aria-expanded="false" aria-label="Menu">
+        <svg class="icon"><use href="#i-menu"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="read-progress" data-progress aria-hidden="true"></div>
+</header>

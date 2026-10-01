@@ -1,0 +1,38 @@
+---
+layout: page
+title: Categories
+kicker: SECTORS
+subtitle: 주제별로 정리된 기록
+permalink: /categories/
+wide: true
+plain: true
+---
+{%- assign cats = site.categories | sort -%}
+<div class="cat-grid">
+  {%- for cat in cats -%}
+  {%- assign cat_key = cat[0] -%}{%- assign info = site.data.categories[cat_key] -%}
+  <a class="cat-card hud reveal" href="#{{ cat[0] | uri_escape }}" style="--h: {{ cat[0] | hue }}">
+    <span class="hud-label">SECTOR {{ forloop.index | prepend: '0' | slice: -2, 2 }}</span>
+    <strong class="cat-card__name">{{ info.name | default: cat[0] }}</strong>
+    {%- if info.description %}<span class="cat-card__desc">{{ info.description }}</span>{% endif %}
+    <span class="cat-card__count"><b>{{ cat[1].size }}</b> posts</span>
+    <span class="cat-card__bar" style="--fill: {{ cat[1].size | times: 100 | divided_by: site.posts.size }}%"></span>
+  </a>
+  {%- endfor -%}
+</div>
+
+{%- for cat in cats -%}
+{%- assign cat_key = cat[0] -%}{%- assign info = site.data.categories[cat_key] -%}
+<section class="cat-section reveal" id="{{ cat[0] }}" style="--h: {{ cat[0] | hue }}">
+  <h2 class="section-title"><span class="hud-label">// {{ cat[0] | upcase }} · {{ cat[1].size }}</span>{{ info.name | default: cat[0] }}</h2>
+  <ul class="post-list">
+    {%- for post in cat[1] %}
+    <li>
+      <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: '%Y.%m.%d' }}</time>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {% include tag-list.html tags=post.tags %}
+    </li>
+    {%- endfor %}
+  </ul>
+</section>
+{%- endfor -%}

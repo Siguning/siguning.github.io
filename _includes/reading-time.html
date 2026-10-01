@@ -1,0 +1,7 @@
+{%- comment -%}
+  Korean is counted per character (number_of_words "auto" = CJK-aware), English per word.
+  ~350 units/minute is a reasonable middle ground for mixed Korean/English/code.
+{%- endcomment -%}
+{%- assign rt_words = include.content | strip_html | number_of_words: "auto" -%}
+{%- assign rt_min = rt_words | divided_by: 350 | plus: 1 -%}
+{{- rt_min -}}
