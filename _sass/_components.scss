@@ -102,6 +102,7 @@
   &__series { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 0.82rem; color: var(--cat); font-family: var(--font-ui); font-weight: 600; letter-spacing: 0.04em; }
   &__excerpt {
     margin: 0; flex: 1;
+    overflow-wrap: anywhere; // long URLs in excerpts must not widen the card
     color: var(--text-dim); font-size: 0.92rem; line-height: 1.65;
     display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
   }
