@@ -26,6 +26,9 @@
         <span class="search-trigger__label">Search</span>
         <kbd class="search-trigger__kbd">Ctrl K</kbd>
       </button>
+      {%- if site.racury.skin_switcher and site.racury.skins.size > 1 %}
+      {% include skin-switcher.html %}
+      {%- endif %}
       <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle light/dark theme">
         <svg class="icon icon--sun"><use href="#i-sun"/></svg>
         <svg class="icon icon--moon"><use href="#i-moon"/></svg>

@@ -33,7 +33,7 @@ layout: default
       {%- if page.series_posts %}
       <details class="series-box hud" {% if page.series_posts.size <= 6 %}open{% endif %}>
         <summary>
-          <span class="hud-label">// SERIES · {{ page.series_index }} / {{ page.series_posts.size }}</span>
+          <span class="hud-label kicker">SERIES · {{ page.series_index }} / {{ page.series_posts.size }}</span>
           <strong>{{ page.series }}</strong>
         </summary>
         <ol>
@@ -45,7 +45,7 @@ layout: default
       {%- endif %}
 
       <details class="toc-mobile hud" data-toc-mobile hidden>
-        <summary class="hud-label">// 목차 (Contents)</summary>
+        <summary class="hud-label kicker">목차 (Contents)</summary>
         <nav data-toc-target></nav>
       </details>
 
@@ -58,13 +58,13 @@ layout: default
         <section class="links-panel hud">
           {%- if page.backlinks.size > 0 %}
           <div>
-            <h2 class="hud-label">// BACKLINKS · {{ page.backlinks.size }}</h2>
+            <h2 class="hud-label kicker">BACKLINKS · {{ page.backlinks.size }}</h2>
             <ul>{% for l in page.backlinks %}<li><a href="{{ l.url | relative_url }}"><svg class="icon"><use href="#i-arrow-left"/></svg>{{ l.title }}</a></li>{% endfor %}</ul>
           </div>
           {%- endif %}
           {%- if page.outlinks.size > 0 %}
           <div>
-            <h2 class="hud-label">// OUTGOING LINKS · {{ page.outlinks.size }}</h2>
+            <h2 class="hud-label kicker">OUTGOING LINKS · {{ page.outlinks.size }}</h2>
             <ul>{% for l in page.outlinks %}<li><a href="{{ l.url | relative_url }}"><svg class="icon"><use href="#i-arrow-right"/></svg>{{ l.title }}</a></li>{% endfor %}</ul>
           </div>
           {%- endif %}
@@ -88,7 +88,7 @@ layout: default
 
         {%- if page.related.size > 0 %}
         <section class="related">
-          <h2 class="section-title"><span class="hud-label">// RELATED SIGNALS</span>관련 글</h2>
+          <h2 class="section-title"><span class="hud-label kicker">RELATED SIGNALS</span>관련 글</h2>
           <div class="related__grid">
             {%- for r in page.related %}
             <a class="related__item hud" href="{{ r.url | relative_url }}" style="--h: {{ r.category | hue }}">
@@ -109,11 +109,11 @@ layout: default
     <aside class="post-aside" aria-label="Post navigation">
       <div class="post-aside__sticky">
         <section class="aside-panel hud" data-toc-panel hidden>
-          <h2 class="hud-label">// CONTENTS</h2>
+          <h2 class="hud-label kicker">CONTENTS</h2>
           <nav class="toc" data-toc></nav>
         </section>
         <section class="aside-panel hud">
-          <h2 class="hud-label">// LOCAL GRAPH <a class="aside-panel__more" href="{{ '/graph/' | relative_url }}">expand ↗</a></h2>
+          <h2 class="hud-label kicker">LOCAL GRAPH <a class="aside-panel__more" href="{{ '/graph/' | relative_url }}">expand ↗</a></h2>
           <div class="local-graph" data-graph="local" data-focus="{{ page.url }}"></div>
         </section>
       </div>

@@ -1,0 +1,20 @@
+{%- comment -%} Skin picker (header). Labels/swatches per skin; main.js wires it up. {%- endcomment -%}
+<div class="skin-switcher" data-skin-switcher>
+  <button class="icon-btn" type="button" data-skin-button aria-haspopup="true" aria-expanded="false" aria-controls="skin-menu" aria-label="Change skin" title="Skin">
+    <svg class="icon"><use href="#i-skin"/></svg>
+  </button>
+  <div class="skin-menu" id="skin-menu" role="menu" aria-label="Skin" hidden>
+    <p class="skin-menu__title hud-label">Skin</p>
+    {%- for s in site.racury.skins %}
+    {%- case s -%}
+      {%- when 'hud' -%}{%- assign label = 'Sci-Fi HUD' -%}{%- assign desc = 'Cockpit · blue hologram' -%}
+      {%- when 'valve' -%}{%- assign label = 'Valve' -%}{%- assign desc = 'Industrial · amber' -%}
+      {%- when 'backrooms' -%}{%- assign label = 'Backrooms' -%}{%- assign desc = 'Retro web · liminal' -%}
+    {%- endcase %}
+    <button class="skin-menu__item" type="button" role="menuitemradio" aria-checked="false" data-skin-pick="{{ s }}">
+      <span class="skin-menu__swatch skin-menu__swatch--{{ s }}" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="skin-menu__text"><b>{{ label }}</b><small>{{ desc }}</small></span>
+    </button>
+    {%- endfor %}
+  </div>
+</div>
