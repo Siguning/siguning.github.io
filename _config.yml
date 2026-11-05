@@ -19,6 +19,17 @@ social:
   github: siguning
   twitter: Siguning01
 
+# Racury theme options (see README.md).
+racury:
+  skin: hud                        # default skin: hud | valve | backrooms
+  skin_switcher: true              # visitors can switch skins from the header (saved in their browser)
+  skins: [hud, valve, backrooms]   # skins the switcher offers; only these skins' fonts are loaded
+  # generate_pages: false          # don't auto-create /archive/ /categories/ /tags/ /series/ /graph/ /404.html
+
+# Search-console verification (rendered by jekyll-seo-tag).
+webmaster_verifications:
+  google: 1NV22aSAQUAAGcC5e99w3DPpyJzvm5vVkswxqZWppk8
+
 # Top navigation (url is relative to baseurl).
 nav:
   - { title: Posts, url: /archive/ }
@@ -73,6 +84,9 @@ defaults:
 exclude:
   - CLAUDE.md
   - README.md
+  - LICENSE
+  - lib/
+  - "*.gemspec"
   - Gemfile
   - Gemfile.lock
   - vendor/

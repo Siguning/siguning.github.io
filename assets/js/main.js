@@ -28,34 +28,124 @@
     return '<svg class="icon"><use href="#i-' + name + '"/></svg>';
   }
 
-  // ───── Theme ─────
+  // ───── Theme (light/dark) and skin ─────
+  // "themechange" fires after either changes, so renderers (mermaid, giscus) can re-read colors.
   function currentTheme() { return doc.getAttribute("data-theme") || "dark"; }
+  function currentSkin() { return doc.getAttribute("data-skin") || "hud"; }
+  function cssVar(name) { return getComputedStyle(doc).getPropertyValue(name).trim(); }
+  function themeChanged() {
+    syncThemeColor();
+    document.dispatchEvent(new CustomEvent("themechange", { detail: currentTheme() }));
+  }
+  // Browser UI color follows the active skin's background (one meta, no media query, after JS runs).
+  function syncThemeColor() {
+    var metas = $$('meta[name="theme-color"]');
+    if (!metas.length) return;
+    metas[0].removeAttribute("media");
+    metas[0].setAttribute("content", cssVar("--bg") || "#000");
+    metas.slice(1).forEach(function (m) { m.parentNode.removeChild(m); });
+  }
   function setTheme(theme) {
     doc.setAttribute("data-theme", theme);
     try { localStorage.setItem("theme", theme); } catch (e) {}
-    document.dispatchEvent(new CustomEvent("themechange", { detail: theme }));
+    themeChanged();
+  }
+  function setSkin(skin) {
+    doc.setAttribute("data-skin", skin);
+    try { localStorage.setItem("skin", skin); } catch (e) {}
+    themeChanged();
+  }
+  // Circular wipe from `origin` when the View Transitions API is available.
+  function withWipe(origin, apply) {
+    if (document.startViewTransition && !reduceMotion) {
+      var r = origin.getBoundingClientRect();
+      doc.style.setProperty("--vt-x", r.left + r.width / 2 + "px");
+      doc.style.setProperty("--vt-y", r.top + r.height / 2 + "px");
+      document.startViewTransition(apply);
+    } else {
+      apply();
+    }
   }
   $$("[data-theme-toggle]").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var next = currentTheme() === "dark" ? "light" : "dark";
-      // Circular wipe from the button when the View Transitions API is available.
-      if (document.startViewTransition && !reduceMotion) {
-        var r = btn.getBoundingClientRect();
-        doc.style.setProperty("--vt-x", r.left + r.width / 2 + "px");
-        doc.style.setProperty("--vt-y", r.top + r.height / 2 + "px");
-        document.startViewTransition(function () { setTheme(next); });
-      } else {
-        setTheme(next);
-      }
+      withWipe(btn, function () { setTheme(next); });
     });
   });
+  syncThemeColor();
+
+  // Skin picker menu
+  var skinRoot = $("[data-skin-switcher]");
+  if (skinRoot) {
+    var skinBtn = $("[data-skin-button]", skinRoot);
+    var skinMenu = $(".skin-menu", skinRoot);
+    var picks = $$("[data-skin-pick]", skinRoot);
+    var markSkin = function () {
+      picks.forEach(function (b) { b.setAttribute("aria-checked", String(b.getAttribute("data-skin-pick") === currentSkin())); });
+    };
+    var openMenu = function (open) {
+      skinMenu.hidden = !open;
+      skinBtn.setAttribute("aria-expanded", String(open));
+      if (open) {
+        markSkin();
+        var on = picks.filter(function (b) { return b.getAttribute("aria-checked") === "true"; })[0] || picks[0];
+        on.focus();
+      }
+    };
+    skinBtn.addEventListener("click", function () { openMenu(skinMenu.hidden); });
+    picks.forEach(function (b, i) {
+      b.addEventListener("click", function () {
+        var skin = b.getAttribute("data-skin-pick");
+        openMenu(false);
+        skinBtn.focus();
+        if (skin !== currentSkin()) withWipe(skinBtn, function () { setSkin(skin); });
+      });
+      b.addEventListener("keydown", function (e) {
+        var d = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
+        if (d) { e.preventDefault(); picks[(i + d + picks.length) % picks.length].focus(); }
+      });
+    });
+    document.addEventListener("click", function (e) { if (!skinMenu.hidden && !skinRoot.contains(e.target)) openMenu(false); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !skinMenu.hidden) { openMenu(false); skinBtn.focus(); }
+    });
+  }
+
+  // Backrooms skin: camcorder clock, and a flashlight that follows the pointer in dark mode.
+  var recClock = $("[data-rec-clock]");
+  if (recClock) {
+    var pad = function (n) { return (n < 10 ? "0" : "") + n; };
+    var months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    var tickClock = function () {
+      if (currentSkin() !== "backrooms") return;
+      var d = new Date();
+      var h = d.getHours();
+      recClock.textContent = (h < 12 ? "AM " : "PM ") + pad(h % 12 || 12) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds()) +
+        "  " + months[d.getMonth()] + "." + pad(d.getDate()) + " 1996";
+    };
+    tickClock();
+    setInterval(tickClock, 1000);
+  }
+  var bg = $(".bg");
+  if (bg && !reduceMotion) {
+    var lightPending = false;
+    window.addEventListener("pointermove", function (e) {
+      if (lightPending || currentSkin() !== "backrooms") return;
+      lightPending = true;
+      requestAnimationFrame(function () {
+        bg.style.setProperty("--mx", e.clientX + "px");
+        bg.style.setProperty("--my", e.clientY + "px");
+        lightPending = false;
+      });
+    }, { passive: true });
+  }
   // Follow the OS setting until the user picks one explicitly.
   window.matchMedia("(prefers-color-scheme: light)").addEventListener("change", function (e) {
     var saved = null;
     try { saved = localStorage.getItem("theme"); } catch (err) {}
     if (!saved) {
       doc.setAttribute("data-theme", e.matches ? "light" : "dark");
-      document.dispatchEvent(new CustomEvent("themechange", { detail: currentTheme() }));
+      themeChanged();
     }
   });
 
@@ -100,6 +190,24 @@
   }, { passive: true });
   onScroll();
   if (toTop) toTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); });
+
+  // Height covered by a sticky top header (0 when a skin turns it into a side rail or inline block).
+  function topOffset() {
+    if (!header) return 0;
+    var r = header.getBoundingClientRect();
+    return getComputedStyle(header).position === "sticky" && r.width > window.innerWidth / 2 ? r.height : 0;
+  }
+
+  // "random" link (backrooms webring): jump to a random post from the search index.
+  $$("[data-random-post]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      fetch(window.SITE.search).then(function (res) { return res.json(); }).then(function (docs) {
+        var others = docs.filter(function (d) { return d.url !== location.pathname; });
+        if (others.length) location.href = others[Math.floor(Math.random() * others.length)].url;
+      }).catch(function () {});
+    });
+  });
 
   // ───── Scroll reveal with stagger ─────
   var reveals = $$(".reveal");
@@ -291,7 +399,7 @@
     var links = $$("[data-toc-id]");
     var active = -1;
     function spy() {
-      var y = (header ? header.offsetHeight : 0) + 40;
+      var y = topOffset() + 40;
       var idx = 0;
       for (var i = 0; i < heads.length; i++) {
         if (heads[i].getBoundingClientRect().top - y <= 0) idx = i; else break;
@@ -328,21 +436,20 @@
     loadScript(CDN.mathjax).catch(function () {});
   }
 
+  // Diagram colors come from the active skin's tokens (keep --panel-solid/--bg/--bg-2/--accent* solid colors).
   function mermaidConfig() {
-    var dark = currentTheme() === "dark";
+    var panel = cssVar("--panel-solid"), accent = cssVar("--accent"), text = cssVar("--text");
     return {
       startOnLoad: false,
       securityLevel: "strict",
       theme: "base",
-      fontFamily: "Pretendard, sans-serif",
-      themeVariables: dark ? {
-        darkMode: true, background: "transparent", primaryColor: "#0d2035", primaryBorderColor: "#3fb4ff",
-        primaryTextColor: "#d7e5f6", lineColor: "#3fb4ff", secondaryColor: "#0a2a3f", tertiaryColor: "#08101c",
-        noteBkgColor: "#10243a", noteTextColor: "#d7e5f6", noteBorderColor: "#7ddcff",
-        edgeLabelBackground: "#0a1422"
-      } : {
-        background: "transparent", primaryColor: "#e6f1ff", primaryBorderColor: "#0a6fe0", edgeLabelBackground: "#ffffff",
-        primaryTextColor: "#0c1a2c", lineColor: "#0a6fe0", secondaryColor: "#dff5ff", tertiaryColor: "#f4f8fd"
+      fontFamily: cssVar("--font-sans") || "sans-serif",
+      themeVariables: {
+        darkMode: currentTheme() === "dark", background: "transparent",
+        primaryColor: panel, primaryBorderColor: accent, primaryTextColor: text,
+        lineColor: accent, secondaryColor: cssVar("--bg-2"), tertiaryColor: cssVar("--bg"),
+        noteBkgColor: panel, noteTextColor: text, noteBorderColor: cssVar("--accent-2"),
+        edgeLabelBackground: panel
       }
     };
   }

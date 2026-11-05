@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ page.lang | default: site.lang | default: 'ko' }}">
+<html lang="{{ page.lang | default: site.lang | default: 'ko' }}" data-skin="{{ site.racury.skin }}">
 {% include head.html %}
 <body class="layout-{{ page.layout | default: 'default' }}">
   {% include icons.html %}
@@ -10,10 +10,16 @@
     <div class="bg__stars bg__stars--3"></div>
     <div class="bg__glow"></div>
     <div class="bg__scan"></div>
+    {%- if site.racury.skins contains 'backrooms' %}
+    <div class="bg__rec" data-skin-only="backrooms"><span class="bg__rec-dot">●</span> REC <span data-rec-clock>AM 03:33:00 NOV.05 1996</span></div>
+    {%- endif %}
   </div>
   <a class="skip-link" href="#main">본문으로 건너뛰기</a>
 
   {% include header.html %}
+  {%- if site.racury.skins contains 'backrooms' %}
+  {% include retro-side.html %}
+  {%- endif %}
 
   <main id="main" class="site-main">
     {{ content }}

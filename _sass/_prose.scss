@@ -19,7 +19,7 @@
     padding: 0 0 10px;
     border-bottom: 1px solid var(--line);
     &::before { // "//" HUD marker
-      content: "//";
+      content: var(--h2-mark);
       margin-right: 10px;
       font-family: var(--font-mono); font-weight: 600;
       color: var(--cat, var(--accent));
@@ -32,7 +32,7 @@
     }
   }
   h1 { font-size: 1.85rem; }
-  h3 { font-size: 1.28rem; &::before { content: "▸ "; color: var(--cat, var(--accent)); } }
+  h3 { font-size: 1.28rem; &::before { content: var(--h3-mark); color: var(--cat, var(--accent)); } }
   h4 { font-size: 1.1rem; }
   h5, h6 { font-size: 1rem; color: var(--text-dim); }
 
@@ -82,7 +82,7 @@
   hr {
     height: 1px; margin: 3em 0; border: 0; overflow: visible; text-align: center;
     background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
-    &::after { content: "◆"; position: relative; top: -0.8em; padding: 0 10px; color: var(--accent); background: var(--bg); font-size: 0.8rem; }
+    &::after { content: var(--hr-mark); position: relative; top: -0.8em; padding: 0 10px; color: var(--accent); background: var(--bg); font-size: 0.8rem; }
   }
 
   img { display: block; height: auto; margin: 0 auto; border: 1px solid var(--line); cursor: zoom-in; transition: box-shadow 0.3s; }
@@ -129,7 +129,7 @@
     color: var(--text-faint);
     background: linear-gradient(90deg, var(--accent-soft), transparent);
   }
-  .code-block__lang::before { content: "■ "; color: var(--cat, var(--accent)); }
+  .code-block__lang::before { content: var(--code-mark); color: var(--cat, var(--accent)); }
   .code-block__copy {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 3px 9px;
@@ -190,7 +190,7 @@
     margin-top: 3em; padding-top: 1em;
     border-top: 1px dashed var(--line-strong);
     font-size: 0.9rem; color: var(--text-dim);
-    &::before { content: "// FOOTNOTES"; display: block; margin-bottom: 8px; font-family: var(--font-ui); font-weight: 700; letter-spacing: 0.16em; color: var(--accent); font-size: 0.8rem; }
+    &::before { content: var(--kicker) " FOOTNOTES"; display: block; margin-bottom: 8px; font-family: var(--font-ui); font-weight: 700; letter-spacing: 0.16em; color: var(--accent); font-size: 0.8rem; }
   }
   sup a.footnote { font-family: var(--font-mono); font-size: 0.75em; padding: 0 2px; }
 

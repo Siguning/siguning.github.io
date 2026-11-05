@@ -1,0 +1,185 @@
+// ───── Skin "valve": page structure ─────
+// The site is laid out like a Source-engine game menu:
+//   • header → fixed left "main menu" rail (title top-left, big stacked menu words, tools at the bottom)
+//   • home   → full-height title screen with a text menu + HUD stat boxes, then a "chapter select" grid
+//   • posts  → full-width chapter title card, then the text; "next chapter" leads the pager
+// Colors/type are in _valve.scss; this file only moves things around.
+
+$s: '[data-skin="valve"]';
+$rail: 264px;
+
+:root#{$s} {
+  // ── Chapter select (post cards become image-style tiles) ──
+  .post-grid { grid-template-columns: repeat(auto-fill, minmax(min(250px, 100%), 1fr)); gap: 28px 22px; }
+  .post-card {
+    padding: 0 0 6px;
+    background: none; border: 0; box-shadow: none;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    &::before, &::after { display: none; }
+    &__thumb { order: 0; }
+    &__title { order: 1; margin: 14px 2px 4px; font-size: 1.08rem; }
+    &__series { order: 2; margin: 0 2px 4px; }
+    &__meta { order: 3; margin: 0 2px; }
+    &__excerpt, .tag-list { display: none; }
+    &:hover {
+      transform: none; background: none; box-shadow: none;
+      .post-card__thumb { outline-color: var(--accent); }
+      .post-card__title { color: var(--accent); }
+    }
+  }
+  .post-card__thumb {
+    position: relative; overflow: hidden;
+    aspect-ratio: 16 / 9;
+    border-radius: 4px;
+    background:
+      radial-gradient(120% 90% at 85% 0%, color-mix(in srgb, var(--cat) 50%, transparent), transparent 62%),
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 4px),
+      linear-gradient(160deg, #2b2721, #0c0b09);
+    background-size: cover; background-position: center;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), var(--shadow);
+    outline: 2px solid transparent; outline-offset: 3px;
+    transition: outline-color 0.2s;
+  }
+  .post-card__no {
+    position: absolute; left: 12px; top: 9px;
+    font-family: var(--font-display); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.24em;
+    color: #fff4e2; text-shadow: 0 1px 3px #000;
+  }
+  .post-card__mark {
+    position: absolute; left: 10px; right: 0; bottom: -0.12em;
+    font-style: normal; font-family: var(--font-display); font-weight: 700;
+    font-size: 3.3rem; line-height: 1; text-transform: uppercase; white-space: nowrap; overflow: hidden;
+    color: rgba(255, 244, 226, 0.13);
+  }
+
+  // Category chips → tab strip
+  .section-head .chip-row { gap: 0; border-bottom: 1px solid var(--line); }
+  .section-head .chip {
+    margin-bottom: -1px; padding: 6px 14px;
+    border: 0; border-bottom: 2px solid transparent; border-radius: 0;
+    background: none; box-shadow: none;
+    &.is-active { background: none; border-bottom-color: var(--accent); box-shadow: none; }
+  }
+
+  // ── Home: title screen ──
+  .hero {
+    position: relative;
+    grid-template-columns: 1fr;
+    align-content: end;
+    min-height: calc(100svh - var(--header-h));
+    padding-top: 40px; padding-bottom: 14vh;
+    &__title { margin: 8px 0 12px; }
+    &__actions { flex-direction: column; align-items: flex-start; gap: 0; margin-top: 30px; }
+    &__panel {
+      padding: 0; background: none; border: 0; box-shadow: none;
+      backdrop-filter: none; -webkit-backdrop-filter: none;
+      &::before { display: none; }
+    }
+    .radar { display: none; }
+    .stats {
+      grid-template-columns: repeat(4, minmax(0, 92px));
+      dt { overflow-wrap: normal; @media (max-width: 520px) { font-size: 0.66rem; letter-spacing: 0.04em; } }
+    }
+    &::after { // scroll cue
+      content: "▼   CHAPTER SELECT";
+      position: absolute; left: 20px; bottom: 4vh;
+      font-family: var(--font-ui); font-size: 0.8rem; letter-spacing: 0.3em; white-space: pre;
+      color: var(--text-faint);
+      animation: valve-bob 2.4s ease-in-out infinite;
+    }
+    @media (min-width: 861px) {
+      &__panel { position: absolute; right: 20px; bottom: 14vh; }
+    }
+  }
+  // Text-menu buttons (title screen + 404)
+  :is(.hero, .lost) .hero__actions .btn {
+    height: auto; padding: 3px 0;
+    font-size: 1.6rem; font-weight: 600; letter-spacing: 0.06em;
+    color: var(--text-dim);
+    background: none; border: 0; border-radius: 0; box-shadow: none;
+    transition: color 0.2s, transform 0.25s var(--ease);
+    .icon { display: none; }
+    &::after { display: none; }
+    &::before { content: "▸"; width: 0; overflow: hidden; color: var(--accent); transition: width 0.25s var(--ease); }
+    &:hover { color: var(--text); background: none; box-shadow: none; transform: none; &::before { width: 1em; } }
+    &--primary { color: var(--text); }
+  }
+  .lost .hero__actions { align-items: center; }
+
+  // ── Posts: chapter title card ──
+  .post-head {
+    min-height: min(64vh, 640px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding-top: 64px; padding-bottom: 40px;
+    .breadcrumb { display: none; }
+    .post-meta, .tag-list { justify-content: center; }
+    &__chapter {
+      margin: 0;
+      font-family: var(--font-display); font-weight: 600; font-size: 1rem; letter-spacing: 0.45em;
+      color: var(--accent);
+      animation: chapter-in 1.2s var(--ease) both;
+    }
+    &__title { margin: 8px auto 18px; font-family: var(--font-display); font-weight: 600; font-size: clamp(2.2rem, 5.6vw, 4.4rem); line-height: 1.08; }
+    &::after { content: ""; width: 1px; height: 56px; margin-top: 34px; background: linear-gradient(var(--accent), transparent); }
+  }
+  .post-layout { gap: 40px; }
+  .pager {
+    grid-template-columns: 1fr;
+    &__item--next {
+      order: -1; grid-column: auto; align-items: flex-start; text-align: left;
+      padding: 26px 28px;
+      strong { font-family: var(--font-display); font-size: 1.7rem; font-weight: 600; }
+    }
+  }
+}
+
+// ── Main-menu rail (wide screens) ──
+@media (min-width: 961px) {
+  :root#{$s} {
+    scroll-padding-top: 24px;
+    body { padding-left: $rail; }
+    .site-header {
+      position: fixed; inset: 0 auto 0 0; width: $rail; height: auto;
+      border-bottom: 0; border-right: 1px solid var(--line);
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.28));
+      &.is-hidden { transform: none; }
+      &::after { display: none; }
+    }
+    &[data-theme="light"] .site-header { background: linear-gradient(90deg, rgba(250, 248, 244, 0.92), rgba(250, 248, 244, 0.6)); }
+    .site-header__inner {
+      flex-direction: column; align-items: stretch; gap: 0;
+      height: 100%; max-width: none; padding: 40px 28px 24px;
+    }
+    .logo {
+      flex-direction: column; align-items: flex-start; gap: 16px;
+      font-size: 2.1rem; letter-spacing: 0.06em; line-height: 0.92; white-space: normal;
+      &__text { display: flex; flex-direction: column; }
+      &__sep { width: 0; height: 0; overflow: hidden; } // still a flex item, so RACURY / WORKS stack
+      &__status { display: none; }
+      &__mark svg { width: 38px; height: 38px; }
+    }
+    .nav {
+      flex-direction: column; gap: 0; margin: auto 0 0;
+      &__link {
+        padding: 5px 0; font-size: 1.5rem; letter-spacing: 0.05em; font-weight: 600;
+        color: var(--text-dim);
+        transition: color 0.2s, transform 0.25s var(--ease);
+        &::after { display: none; }
+        &:hover { color: var(--text); transform: translateX(6px); }
+        &.is-active { color: var(--accent); }
+      }
+      &__index { display: none; }
+    }
+    .header-actions { flex-wrap: wrap; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .search-trigger { flex: 1 1 100%; min-width: 0; }
+    .skin-menu { top: auto; bottom: calc(100% + 10px); right: auto; left: 0; }
+    .read-progress { // vertical, along the rail's edge
+      left: auto; right: -1px; top: 0; bottom: 0; width: 2px; height: auto;
+      transform-origin: 50% 0; transform: scaleY(var(--progress, 0));
+    }
+    .hero { min-height: 100svh; }
+  }
+}
+
+@keyframes valve-bob { 50% { transform: translateY(5px); opacity: 0.6; } }

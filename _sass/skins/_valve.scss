@@ -1,0 +1,234 @@
+// ───── Skin: "valve" ─────
+// Valve / Source-engine inspired: warm industrial concrete, amber holo-HUD accents,
+// rounded translucent HUD boxes, condensed uppercase type, chapter-title page headers.
+
+$s: '[data-skin="valve"]';
+
+@mixin dark {
+  color-scheme: dark;
+  --bg: #0f0e0c;
+  --bg-2: #181613;
+  --panel: rgba(26, 24, 21, 0.78);
+  --panel-solid: #1c1a17;
+  --panel-hover: rgba(36, 33, 29, 0.9);
+  --line: rgba(255, 170, 80, 0.13);
+  --line-strong: rgba(255, 160, 60, 0.4);
+  --text: #ece6dc;
+  --text-dim: #aaa194;
+  --text-faint: #716a60;
+  --accent: #ff9b2f;
+  --accent-2: #ffc06b;
+  --accent-deep: #e8730c;
+  --accent-ink: #1a0d00;
+  --accent-soft: rgba(255, 155, 47, 0.11);
+  --glow: 0 0 18px rgba(255, 155, 47, 0.32);
+  --shadow: 0 18px 44px -20px rgba(0, 0, 0, 0.85);
+  --star: rgba(255, 196, 130, 0.55);
+  --grid: rgba(255, 190, 120, 0.035);
+  --code-bg: #0c0b0a;
+  --cat-l: 62%;
+  --cat-s: 90%;
+  --ok: #8fd16a;
+  --warn: #ffcc4d;
+  --danger: #ff5a48;
+  --violet: #62b8ff; // "important" callouts get a cold blue, the amber's counterpart
+
+  --sx-text: #e6dfd3;
+  --sx-comment: #7b7367;
+  --sx-keyword: #ff9b2f;
+  --sx-type: #7fc6e8;
+  --sx-func: #ffd27a;
+  --sx-string: #b5d77a;
+  --sx-number: #ff7c5c;
+  --sx-const: #f08fb0;
+  --sx-attr: #e8b98a;
+  --sx-op: #b0a596;
+  --sx-preproc: #d79bff;
+  --sx-error: #ff5a48;
+}
+
+@mixin light {
+  color-scheme: light;
+  --bg: #e8e5df;
+  --bg-2: #dcd8d0;
+  --panel: rgba(250, 248, 244, 0.86);
+  --panel-solid: #faf8f4;
+  --panel-hover: rgba(255, 255, 255, 0.96);
+  --line: rgba(110, 70, 20, 0.15);
+  --line-strong: rgba(200, 100, 10, 0.42);
+  --text: #1d1b18;
+  --text-dim: #5b554c;
+  --text-faint: #8d867b;
+  --accent: #d26400;
+  --accent-2: #e67a00;
+  --accent-deep: #a54c00;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(210, 100, 0, 0.09);
+  --glow: 0 0 14px rgba(210, 100, 0, 0.16);
+  --shadow: 0 16px 36px -22px rgba(60, 35, 10, 0.4);
+  --star: transparent;
+  --grid: rgba(90, 60, 20, 0.05);
+  --code-bg: #f5f2ec;
+  --cat-l: 42%;
+  --cat-s: 85%;
+  --ok: #3d8a1f;
+  --warn: #a86400;
+  --danger: #c8321f;
+  --violet: #1d6fb8;
+
+  --sx-text: #22201c;
+  --sx-comment: #8b8275;
+  --sx-keyword: #b85200;
+  --sx-type: #1f6f91;
+  --sx-func: #8a5a00;
+  --sx-string: #4f7a12;
+  --sx-number: #c2410c;
+  --sx-const: #a8325e;
+  --sx-attr: #8a4f1c;
+  --sx-op: #5e574d;
+  --sx-preproc: #7a3bb0;
+  --sx-error: #c8321f;
+}
+
+:root#{$s} {
+  @include dark;
+  --font-display: "Barlow Condensed", "Barlow", var(--font-sans);
+  --font-ui: "Barlow Condensed", "Barlow", var(--font-sans);
+  --radius: 6px;
+  --cut: 0px;
+  --btn-cut: 0px;
+  --hue-shift: -175; // blue 190–235 → red-orange…yellow 15–60
+  --kicker: "▍";
+  --h2-mark: "▍";
+  --h3-mark: "› ";
+  --hr-mark: "▪";
+  --code-mark: "▸ ";
+  --glitch-a: #ffb347;
+  --glitch-b: #62b8ff;
+}
+:root#{$s}[data-theme="light"] { @include light; }
+@media (prefers-color-scheme: light) { :root#{$s}:not([data-theme]) { @include light; } }
+
+:root#{$s} {
+  // ── Background: concrete panels, warm haze from above, cold bounce light below, floating dust ──
+  .bg {
+    &__grid {
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid) 2px, transparent 2px),
+        linear-gradient(90deg, var(--grid) 2px, transparent 2px);
+      background-size: 240px 160px;
+      mask-image: linear-gradient(to bottom, #000 0%, transparent 85%);
+      animation: none;
+    }
+    &__glow {
+      background:
+        radial-gradient(70vw 45vw at 80% -15%, rgba(255, 140, 40, 0.16), transparent 60%),
+        radial-gradient(55vw 40vw at -5% 105%, rgba(70, 150, 220, 0.09), transparent 60%),
+        radial-gradient(120vw 80vw at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.45));
+    }
+    &__stars--1 { opacity: 0.35; animation-duration: 260s; }
+    &__stars--2 { opacity: 0.25; animation-duration: 200s; filter: blur(1px); }
+    &__stars--3, &__scan { display: none; }
+  }
+  &[data-theme="light"] .bg__glow {
+    background:
+      radial-gradient(70vw 45vw at 80% -15%, rgba(255, 150, 50, 0.14), transparent 60%),
+      radial-gradient(55vw 40vw at -5% 105%, rgba(70, 150, 220, 0.08), transparent 60%);
+  }
+
+  // ── HUD boxes: rounded, translucent, an amber tab on the top edge instead of brackets ──
+  .hud {
+    clip-path: none;
+    border-radius: 8px;
+    backdrop-filter: blur(16px) saturate(1.1);
+    -webkit-backdrop-filter: blur(16px) saturate(1.1);
+    &::before {
+      border-radius: inherit;
+      background: linear-gradient(var(--bracket), var(--bracket)) 18px 0 / 36px 2px no-repeat;
+      transition: background-size 0.4s var(--ease);
+    }
+  }
+  .post-card {
+    &::after { display: none; }
+    &:hover::before { background-size: 96px 2px; }
+  }
+  .pager__item:hover::before, .related__item:hover::before, .cat-card:hover::before { background-size: 72px 2px; }
+
+  // ── Header / nav ──
+  .logo { font-weight: 700; letter-spacing: 0.16em; font-size: 1.12rem; }
+  .logo__mark svg { filter: none; }
+  .logo__status { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+  .nav__link { font-size: 1.05rem; letter-spacing: 0.1em; }
+  .nav__link::after { height: 3px; border-radius: 2px; }
+  .search-trigger__label { font-size: 1rem; }
+
+  // ── Buttons: flat slabs; primary is solid amber ──
+  .btn {
+    border-radius: 4px;
+    font-size: 1.02rem; letter-spacing: 0.1em;
+    &--primary {
+      background: var(--accent);
+      &:hover { background: var(--accent-2); }
+    }
+  }
+  .chip, .tag, .switch span, .tag-filter__find, .graph-view__find { border-radius: 4px; }
+  .chip { font-size: 0.98rem; }
+  .chip__dot { border-radius: 50%; transform: none; }
+  .cat-badge { border-radius: 0 3px 3px 0; font-size: 0.86rem; }
+  .cat-badge__dot { border-radius: 50%; transform: none; }
+
+  // ── Home: chapter-title hero, HUD-style stat boxes ──
+  .hero__title { font-weight: 700; letter-spacing: 0.02em; font-size: clamp(2.8rem, 7vw, 5.2rem); line-height: 0.95; }
+  .hero__title-accent { filter: drop-shadow(0 0 22px color-mix(in srgb, var(--accent) 30%, transparent)); }
+  .glitch::before, .glitch::after { display: none; }
+  .radar {
+    border-width: 2px;
+    &__sweep { background: conic-gradient(from 0deg, transparent 0 320deg, color-mix(in srgb, var(--accent) 40%, transparent) 360deg); }
+  }
+  .stats {
+    gap: 10px;
+    > div { border-top: 0; border-radius: 6px; background: rgba(0, 0, 0, 0.32); }
+    dt { font-size: 0.8rem; color: var(--text-dim); }
+    dd { font-size: 2.1rem; }
+  }
+  &[data-theme="light"] .stats > div { background: rgba(60, 40, 10, 0.06); }
+
+  // ── Section / page titles: big condensed type that fades in with tightening letter-spacing ──
+  .section-title { font-weight: 700; font-size: 1.7rem; letter-spacing: 0.04em; }
+  .page-head__title, .post-head__title { animation: chapter-in 1.2s var(--ease) both; }
+  .page-head__title { font-weight: 700; letter-spacing: 0.06em; font-size: clamp(2.4rem, 6vw, 3.8rem); }
+  .post-head__title { text-shadow: none; }
+  .hud-label { font-size: 0.86rem; letter-spacing: 0.14em; }
+  .timeline__label { font-weight: 700; }
+  .timeline__label::before { transform: none; border-radius: 50%; }
+  .cat-card__name { font-weight: 700; font-size: 1.3rem; }
+  .cat-card__bar { border-radius: 0 0 8px 8px; }
+
+  // ── Long-form content ──
+  .prose {
+    h1, h2 {
+      &::before { font-family: var(--font-sans); font-weight: 400; margin-right: 6px; text-shadow: none; }
+      &::after { height: 3px; width: 56px; box-shadow: none; }
+    }
+    hr::after { font-size: 1rem; }
+    blockquote { border-radius: 0 6px 6px 0; }
+    .callout { border-radius: 6px; }
+    div.highlighter-rouge, figure.highlight, .code-block { border-radius: 6px; overflow: hidden; }
+    .table-wrap, details:not(.callout), .mermaid { border-radius: 6px; }
+    img { border-radius: 6px; }
+    :not(pre) > code { border-radius: 4px; }
+  }
+  .code-block__bar { font-size: 0.82rem; }
+
+  // ── Search, 404 ──
+  .search__panel { border-radius: 10px; }
+  .lost__code { font-weight: 700; animation: none; }
+
+  // Light mode: drop the dark-only dust.
+  &[data-theme="light"] .bg__stars { display: none; }
+}
+
+@keyframes chapter-in {
+  from { opacity: 0; letter-spacing: 0.35em; filter: blur(4px); }
+}

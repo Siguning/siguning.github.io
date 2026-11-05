@@ -1,5 +1,7 @@
-// Design tokens. Dark is the default; light overrides it.
-// `--h` (hue, 190–235) is set per category on elements; `--cat*` derive from it.
+// Design tokens for the default "hud" skin. Dark is the default; light overrides it.
+// Other skins (_sass/skins/) override these under :root[data-skin="…"].
+// `--h` (hue, 190–235) is set per category on elements; `--cat*` derive from it,
+// rotated by the skin's `--hue-shift` so category colors fit every palette.
 
 @mixin dark {
   color-scheme: dark;
@@ -73,9 +75,20 @@
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --header-h: 64px;
   --h: 205;
-  --cat: hsl(var(--h) var(--cat-s) var(--cat-l));
-  --cat-soft: hsl(var(--h) 90% 55% / 0.14);
-  --cat-line: hsl(var(--h) 90% 60% / 0.45);
+  --hue-shift: 0;
+  --cat: hsl(calc(var(--h) + var(--hue-shift)) var(--cat-s) var(--cat-l));
+  --cat-soft: hsl(calc(var(--h) + var(--hue-shift)) var(--cat-s) 55% / 0.14);
+  --cat-line: hsl(calc(var(--h) + var(--hue-shift)) var(--cat-s) 60% / 0.45);
+
+  // Decorative glyphs/shapes; skins swap these instead of re-styling every rule.
+  --kicker: "//";        // prefix of .kicker labels
+  --h2-mark: "//";       // prose h1/h2 marker
+  --h3-mark: "▸ ";       // prose h3 marker
+  --hr-mark: "◆";        // ornament in the middle of <hr>
+  --code-mark: "■ ";     // before the language name on code blocks
+  --btn-cut: 10px;       // chamfer size of .btn
+  --glitch-a: #00e5ff;
+  --glitch-b: #4b6bff;
 }
 
 @media (prefers-color-scheme: light) {
@@ -86,7 +99,7 @@
 
 // Re-evaluate the derived category colors wherever --h is overridden.
 [style*="--h"] {
-  --cat: hsl(var(--h) var(--cat-s) var(--cat-l));
-  --cat-soft: hsl(var(--h) 90% 55% / 0.14);
-  --cat-line: hsl(var(--h) 90% 60% / 0.45);
+  --cat: hsl(calc(var(--h) + var(--hue-shift)) var(--cat-s) var(--cat-l));
+  --cat-soft: hsl(calc(var(--h) + var(--hue-shift)) var(--cat-s) 55% / 0.14);
+  --cat-line: hsl(calc(var(--h) + var(--hue-shift)) var(--cat-s) 60% / 0.45);
 }

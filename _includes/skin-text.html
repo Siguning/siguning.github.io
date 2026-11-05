@@ -1,0 +1,8 @@
+{%- comment -%}
+  Text that changes with the active skin (CSS shows the span matching html[data-skin]).
+  Usage: {% include skin-text.html hud="SYSTEM ONLINE" valve="CHAPTER 01" backrooms="LEVEL 0" %}
+  A skin without its own value falls back to `hud`.
+{%- endcomment -%}
+{%- for s in site.racury.skins -%}
+<span data-skin-only="{{ s }}">{{ include[s] | default: include.hud }}</span>
+{%- endfor -%}

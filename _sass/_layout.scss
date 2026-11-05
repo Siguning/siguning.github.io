@@ -133,6 +133,14 @@ kbd {
 
 .nav-toggle { display: none; }
 
+// Mid widths: the full nav still fits on one row only if search shrinks to an icon.
+@media (max-width: 1240px) {
+  .search-trigger { min-width: 0; &__label, &__kbd { display: none; } }
+  .site-header__inner { gap: 16px; }
+  .nav__link { padding-inline: 9px; }
+}
+@media (max-width: 1100px) { .nav__index { display: none; } }
+
 @media (max-width: 960px) {
   .nav-toggle { display: inline-grid; }
   .search-trigger { min-width: 0; &__label, &__kbd { display: none; } }
@@ -155,6 +163,7 @@ kbd {
 @media (max-width: 420px) {
   .site-header__inner { gap: 10px; padding: 0 14px; }
   .logo { gap: 7px; font-size: 0.82rem; letter-spacing: 0.06em; min-width: 0; }
+  .logo__text { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   .logo__mark svg { width: 26px; height: 26px; }
   .logo__status { display: none; }
   .header-actions { gap: 6px; }

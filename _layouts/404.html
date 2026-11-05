@@ -1,0 +1,12 @@
+---
+layout: default
+---
+<section class="container lost">
+  <span class="hud-label kicker">{% include skin-text.html hud="ERROR · NAV-COMPUTER" valve="ERROR · MAP NOT FOUND" backrooms="ERROR · YOU NOCLIPPED" %}</span>
+  <h1 class="lost__code glitch" data-text="404">404</h1>
+  <p class="lost__msg">{% include skin-text.html hud="SIGNAL LOST — 요청한 좌표에 아무것도 없습니다." valve="CONNECTION LOST — 요청한 경로를 불러올 수 없습니다." backrooms="현실 밖으로 빠져나왔습니다. 여기엔 젖은 카펫과 형광등뿐입니다." %}</p>
+  <div class="hero__actions">
+    <a class="btn btn--primary" href="{{ '/' | relative_url }}"><svg class="icon"><use href="#i-arrow-left"/></svg>{% include skin-text.html hud="Return to base" valve="Main menu" backrooms="Find the exit" %}</a>
+    <button class="btn" type="button" data-search-open><svg class="icon"><use href="#i-search"/></svg>Search</button>
+  </div>
+</section>

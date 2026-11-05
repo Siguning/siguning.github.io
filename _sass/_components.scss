@@ -8,7 +8,7 @@
   color: var(--text);
   background: var(--accent-soft);
   border: 1px solid var(--line-strong);
-  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  clip-path: polygon(var(--btn-cut) 0, 100% 0, 100% calc(100% - var(--btn-cut)), calc(100% - var(--btn-cut)) 100%, 0 100%, 0 var(--btn-cut));
   cursor: pointer;
   overflow: hidden;
   transition: color 0.25s, background-color 0.25s, box-shadow 0.25s, transform 0.2s;
@@ -62,7 +62,7 @@
   border-left: 2px solid var(--cat);
   transition: background-color 0.2s, box-shadow 0.2s;
   &__dot { width: 5px; height: 5px; background: currentColor; transform: rotate(45deg); box-shadow: 0 0 6px currentColor; }
-  &:hover { color: var(--cat); box-shadow: 0 0 14px var(--cat-soft); background: hsl(var(--h) 90% 55% / 0.24); }
+  &:hover { color: var(--cat); box-shadow: 0 0 14px var(--cat-soft); background: color-mix(in srgb, var(--cat) 24%, transparent); }
 }
 
 // ───── Tags ─────

@@ -257,8 +257,8 @@
   .g-link--tag { stroke-dasharray: 2 3; stroke-opacity: 0.35; }
   .g-node { cursor: pointer; transition: opacity 0.25s; }
   .g-node circle, .g-node rect { transition: r 0.25s, stroke-width 0.25s; }
-  .g-node--post circle { fill: hsl(var(--h) 95% var(--cat-l)); stroke: var(--bg); stroke-width: 1.5; filter: drop-shadow(0 0 4px hsl(var(--h) 95% 60% / 0.8)); }
-  .g-node--category rect { fill: var(--bg); stroke: hsl(var(--h) 95% var(--cat-l)); stroke-width: 2; }
+  .g-node--post circle { fill: var(--cat); stroke: var(--bg); stroke-width: 1.5; filter: drop-shadow(0 0 4px color-mix(in srgb, var(--cat) 80%, transparent)); }
+  .g-node--category rect { fill: var(--bg); stroke: var(--cat); stroke-width: 2; }
   .g-node--tag rect { fill: var(--panel-solid); stroke: var(--text-faint); stroke-width: 1; }
   .g-node--focus circle { stroke: var(--text); stroke-width: 2.5; }
   .g-label {
@@ -266,7 +266,7 @@
     paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round;
     pointer-events: none; transition: opacity 0.25s;
   }
-  .g-node--category .g-label { font-family: var(--font-ui); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; fill: hsl(var(--h) 95% var(--cat-l)); }
+  .g-node--category .g-label { font-family: var(--font-ui); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; fill: var(--cat); }
   .g-node--tag .g-label { font-family: var(--font-mono); font-size: 10px; fill: var(--text-faint); }
   &.has-hover, &.has-find {
     .g-node, .g-link { opacity: 0.12; }

@@ -1,0 +1,33 @@
+{%- comment -%}
+  Backrooms skin only: the marquee under the banner and the 90s homepage sidebar
+  (counter, last update, webring, badges). Placed into the page grid by _sass/skins/_backrooms.scss.
+{%- endcomment -%}
+{%- assign visible = site.posts | where_exp: "p", "p.hidden != true" -%}
+<div class="marquee" data-skin-only="backrooms" aria-hidden="true">
+  <span>※ 출구를 찾았다면 이 페이지를 닫지 마세요 ※ 형광등 소리가 들리면 정상입니다 ※ 당신은 이 복도를 이미 지나쳤습니다 ※ 방문해 주셔서 감사합니다 ※&nbsp;</span>
+</div>
+<aside class="retro-side" data-skin-only="backrooms" aria-label="Site info">
+  <div class="retro-box">
+    <p class="retro-box__title">COUNTER</p>
+    <p class="retro-counter" title="Posts on this site">{{ visible.size | prepend: '000000' | slice: -6, 6 }}</p>
+    <small>logs found{% if visible.size > 0 %} since {{ visible.last.date | date: '%Y' }}{% endif %}</small>
+  </div>
+  {%- if visible.size > 0 %}
+  <div class="retro-box">
+    <p class="retro-box__title">LAST UPDATED</p>
+    <p><a href="{{ visible.first.url | relative_url }}">{{ visible.first.date | date: '%Y.%m.%d' }}</a></p>
+  </div>
+  {%- endif %}
+  <div class="retro-box">
+    <p class="retro-box__title">WEBRING</p>
+    <p class="retro-ring">
+      {%- assign ring_prev = page.previous | default: visible.last -%}
+      {%- assign ring_next = page.next | default: visible.first -%}
+      {%- if ring_prev %}<a href="{{ ring_prev.url | relative_url }}" title="{{ ring_prev.title | escape }}">« prev</a>{% endif %}
+      <a href="#" data-random-post>random</a>
+      {%- if ring_next %}<a href="{{ ring_next.url | relative_url }}" title="{{ ring_next.title | escape }}">next »</a>{% endif %}
+    </p>
+  </div>
+  <p class="retro-uc">UNDER CONSTRUCTION</p>
+  <p class="retro-badges" aria-hidden="true"><i>Netscape<br>NOW!</i><i>800×600<br>best</i><i>HTML<br>3.2</i><i>NO<br>EXIT</i></p>
+</aside>

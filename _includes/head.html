@@ -1,17 +1,25 @@
+{%- assign rc = site.racury -%}
+{%- assign skins = rc.skins -%}
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="dark light">
   <script>
-    /* Apply the saved/system theme before first paint to avoid a flash. */
+    /* Apply the saved/system light-dark mode and the saved skin before first paint to avoid a flash. */
     (function () {
-      var t = null;
-      try { t = localStorage.getItem("theme"); } catch (e) {}
+      var d = document.documentElement, t = null, s = null;
+      var skins = {{ skins | jsonify }};
+      try {
+        t = localStorage.getItem("theme");
+        {% if rc.skin_switcher %}s = localStorage.getItem("skin");{% endif %}
+      } catch (e) {}
       if (t !== "light" && t !== "dark") {
         t = window.matchMedia && matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
       }
-      document.documentElement.setAttribute("data-theme", t);
-      document.documentElement.classList.add("js");
+      if (skins.indexOf(s) < 0) s = {{ rc.skin | jsonify }};
+      d.setAttribute("data-theme", t);
+      d.setAttribute("data-skin", s);
+      d.classList.add("js");
     })();
   </script>
   <meta name="theme-color" content="#04070d" media="(prefers-color-scheme: dark)">
@@ -20,28 +28,37 @@
   {% feed_meta %}
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/img/favicon.svg' | relative_url }}">
 
+  {%- comment -%} Each skin's web fonts; browsers only download the files a page actually uses. {%- endcomment -%}
+  {%- capture gfonts -%}
+    family=JetBrains+Mono:wght@400;600
+    {%- if skins contains 'hud' -%}&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700{%- endif -%}
+    {%- if skins contains 'valve' -%}&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@500;600;700{%- endif -%}
+    {%- if skins contains 'backrooms' -%}&family=Gowun+Batang:wght@400;700&family=Courier+Prime:wght@400;700{%- endif -%}
+  {%- endcapture %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?{{ gfonts | strip }}&display=swap">
   <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+  {%- if skins contains 'backrooms' %}
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/npm/galmuri@2.40.3/dist/galmuri.css">
+  {%- endif %}
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
 
   <script>
     window.SITE = {
       baseurl: {{ site.baseurl | default: '' | jsonify }},
-      search: {{ '/search.json' | relative_url | jsonify }},
+      search: {{ '/assets/data/search.json' | relative_url | jsonify }},
       graph: {{ '/assets/data/graph.json' | relative_url | jsonify }}
     };
   </script>
   <script defer src="{{ '/assets/js/main.js' | relative_url }}"></script>
   <script defer src="{{ '/assets/js/search.js' | relative_url }}"></script>
-  {% if page.layout == 'post' or page.graph %}
+  {%- comment -%} `layout.*` holds the merged front matter of the layout chain (e.g. the graph/tags layouts). {%- endcomment -%}
+  {% if page.layout == 'post' or page.graph or layout.graph %}
   <script defer src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
   <script defer src="{{ '/assets/js/graph.js' | relative_url }}"></script>
   {% endif %}
-  {% if page.filters %}
+  {% if page.filters or layout.filters %}
   <script defer src="{{ '/assets/js/filters.js' | relative_url }}"></script>
   {% endif %}
-
-  <meta name="google-site-verification" content="1NV22aSAQUAAGcC5e99w3DPpyJzvm5vVkswxqZWppk8">
 </head>

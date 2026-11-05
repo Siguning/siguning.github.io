@@ -1,5 +1,6 @@
 ---
 # Racury theme entry point; partials live in /_sass.
+# The base partials style the default "hud" skin; _sass/skins/ override it per skin.
 ---
 @use "tokens";
 @use "base";
@@ -8,3 +9,8 @@
 @use "prose";
 @use "syntax";
 @use "pages";
+@use "skins";
+@use "skins/valve";
+@use "skins/backrooms";
+@use "skins/valve-layout";
+@use "skins/backrooms-layout";

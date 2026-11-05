@@ -59,6 +59,9 @@ button, input { font: inherit; color: inherit; }
   line-height: 1.4;
 }
 
+// Section label with a skin-defined prefix ("//" in the HUD skin).
+.kicker::before { content: var(--kicker); opacity: 0.85; }
+
 // ───── HUD panel: translucent, chamfered corner, animated corner brackets ─────
 .hud {
   --bracket: var(--line-strong);
@@ -173,8 +176,8 @@ button, input { font: inherit; color: inherit; }
     opacity: 0;
     pointer-events: none;
   }
-  &::before { color: #00e5ff; }
-  &::after { color: #4b6bff; }
+  &::before { color: var(--glitch-a); }
+  &::after { color: var(--glitch-b); }
   &:hover::before, .is-glitching &::before, &.is-glitching::before { animation: glitch-a 0.5s steps(2) 1; }
   &:hover::after, .is-glitching &::after, &.is-glitching::after { animation: glitch-b 0.5s steps(2) 1; }
 }

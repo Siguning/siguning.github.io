@@ -1,0 +1,258 @@
+// ───── Skin "backrooms": page structure ─────
+// A late-90s personal homepage, centred on the wallpaper:
+//   • banner window (site title in a Netscape title bar) + marquee
+//   • left column of small windows: Navigation, Tools, counter / last update / webring / badges
+//   • the page itself is one big window; the home page lists posts as a "What's New" log,
+//     posts read like a plain document (centred title, Contents box, « prev | next » links)
+// The header markup is flattened with `display: contents` so its pieces become grid cells.
+// Colors/type are in _backrooms.scss; this file only moves things around.
+
+
+$s: '[data-skin="backrooms"]';
+
+@mixin bevel($inset: false) {
+  border: 2px solid;
+  @if $inset { border-color: var(--bevel-lo) var(--bevel-hi) var(--bevel-hi) var(--bevel-lo); }
+  @else { border-color: var(--bevel-hi) var(--bevel-lo) var(--bevel-lo) var(--bevel-hi); }
+}
+@mixin titlebar {
+  position: absolute; left: 0; right: 0; top: 0; height: 22px;
+  margin: 0; padding: 2px 8px;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font-family: var(--font-ui); font-size: 0.75rem; font-weight: 400; line-height: 18px;
+  letter-spacing: 0.03em; text-transform: none; text-align: left;
+  color: var(--titlebar-ink); background: var(--titlebar);
+}
+// A small window with a title bar; `$title` is a quoted string or omitted when markup provides it.
+@mixin window($title: null) {
+  position: relative;
+  padding: 30px 10px 10px;
+  background: var(--panel-solid);
+  @include bevel;
+  box-shadow: var(--shadow);
+  @if $title { &::before { content: $title; @include titlebar; } }
+}
+
+:root#{$s} {
+  scroll-padding-top: 16px;
+
+  body {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-areas:
+      "banner banner"
+      "marq   marq"
+      "nav    main"
+      "tools  main"
+      "side   main"
+      "foot   foot";
+    grid-template-rows: auto auto auto auto 1fr auto;
+    gap: 12px 14px;
+    max-width: 1060px; min-height: 100vh;
+    margin: 0 auto; padding: 14px 14px 24px;
+  }
+  .site-header, .site-header__inner { display: contents; }
+  .read-progress { position: fixed; top: 0; left: 0; z-index: 70; }
+
+  // ── Banner ──
+  .logo {
+    grid-area: banner;
+    position: relative;
+    justify-content: center; gap: 14px;
+    padding: 42px 20px 22px;
+    font-size: clamp(1.5rem, 4.6vw, 2.7rem); letter-spacing: 0.04em;
+    background: var(--panel-solid);
+    @include bevel;
+    box-shadow: var(--shadow);
+    &::before { content: attr(data-window); @include titlebar; padding-right: 64px; }
+    &::after { content: "_ □ ×"; position: absolute; right: 8px; top: 2px; font-family: var(--font-ui); font-size: 0.75rem; letter-spacing: 0.2em; color: var(--titlebar-ink); }
+    &__mark svg { width: 46px; height: 46px; }
+    &__status { display: none; }
+  }
+  .marquee {
+    grid-area: marq;
+    overflow: hidden; white-space: nowrap;
+    padding: 3px 0;
+    font-family: var(--font-ui); font-size: 0.9rem;
+    color: var(--text); background: var(--btn-face);
+    @include bevel(true);
+    span { display: inline-block; padding-left: 100%; animation: marquee 38s linear infinite; }
+  }
+
+  // ── Left column ──
+  .nav {
+    grid-area: nav; align-self: start;
+    @include window("Navigation");
+    position: relative; inset: auto;
+    flex-direction: column; gap: 0; margin: 0;
+    clip-path: none; backdrop-filter: none; border-bottom-width: 2px;
+    &__link {
+      display: flex; align-items: baseline; gap: 6px;
+      padding: 3px 4px; border: 0;
+      font-size: 0.95rem; letter-spacing: 0; text-transform: none;
+      color: var(--accent); text-decoration: underline;
+      &::before { content: "►"; font-size: 0.6em; color: var(--text); text-decoration: none; display: inline-block; }
+      &.is-active::before { color: inherit; }
+    }
+    &__index { display: none; }
+  }
+  .nav-toggle { display: none; }
+  .header-actions {
+    grid-area: tools; align-self: start;
+    @include window("Tools");
+    flex-wrap: wrap; gap: 6px; margin: 0;
+  }
+  .search-trigger { flex: 1 1 100%; width: auto; min-width: 0; justify-content: flex-start; padding: 0 8px; }
+  .search-trigger__label { display: inline; }
+  .search-trigger__kbd { display: none; }
+  .skin-menu { left: 0; right: auto; }
+
+  .retro-side { grid-area: side; align-self: start; display: grid; gap: 12px; }
+  .retro-box {
+    @include window;
+    text-align: center; font-size: 0.85rem; line-height: 1.5;
+    p { margin: 0; }
+    small { color: var(--text-dim); }
+    &__title { @include titlebar; }
+  }
+  .retro-counter {
+    display: block; width: fit-content; margin: 2px auto 4px !important; padding: 0 6px;
+    font-family: var(--font-ui); font-size: 1.5rem; letter-spacing: 0.16em;
+    color: var(--lcd-ink); background: var(--lcd-bg);
+    text-shadow: 0 0 6px color-mix(in srgb, var(--lcd-ink) 60%, transparent);
+    @include bevel(true);
+  }
+  .retro-ring { display: flex; justify-content: center; gap: 10px; a { text-decoration: underline; } }
+  .retro-uc {
+    display: flex; align-items: center; justify-content: center; gap: 6px; margin: 0;
+    font-family: var(--font-ui); font-size: 0.78rem; color: var(--danger);
+    animation: blink 1.2s steps(1) infinite;
+    &::before, &::after { content: ""; flex: 1; max-width: 26px; height: 10px; background: repeating-linear-gradient(-45deg, #f2c200 0 5px, #1a1a1a 5px 10px); }
+  }
+  .retro-badges {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 0;
+    i {
+      display: grid; place-items: center; height: 31px;
+      font: 0.62rem/1.05 var(--font-ui); font-style: normal; text-align: center;
+      color: #fff; border: 1px solid #000;
+      background: linear-gradient(#3a6ea5, #0a246a);
+      &:nth-child(2) { background: linear-gradient(#5a5a5a, #1a1a1a); color: #9dff6a; }
+      &:nth-child(3) { background: linear-gradient(#f4e48a, #b49a2a); color: #2a2410; }
+      &:nth-child(4) { background: linear-gradient(#c0392b, #6e140c); }
+    }
+  }
+
+  // ── The page window ──
+  .site-main {
+    grid-area: main; min-width: 0;
+    padding: 6px 0 32px;
+    background: var(--panel-solid);
+    @include bevel;
+    box-shadow: var(--shadow);
+  }
+  .container { max-width: none; padding-inline: 18px; }
+  .section { margin-top: 32px; }
+  .site-footer {
+    grid-area: foot;
+    background: none; border: 0;
+    &__inner { flex-direction: column; justify-content: center; gap: 8px; padding: 8px; text-align: center; }
+    &__links { justify-content: center; }
+  }
+
+  // ── Home: welcome + "What's New" log ──
+  .hero {
+    grid-template-columns: 1fr; gap: 0;
+    padding-top: 22px;
+    text-align: center;
+    &__desc { margin-inline: auto; min-height: 0; }
+    &__actions { justify-content: center; }
+    &__panel { display: none; } // stats live in the sidebar counter
+  }
+  .section-head { flex-direction: column; align-items: stretch; gap: 8px; border-bottom: 3px double var(--line-strong); padding-bottom: 6px; }
+  .section-head .chip-row { gap: 0; }
+  .section-head .chip { // [ All | Godot | … ] text links
+    padding: 0 6px; border: 0; background: none; box-shadow: none;
+    color: var(--accent); text-decoration: underline;
+    .chip__dot { display: none; }
+    & + .chip::before { content: "|"; margin-right: 12px; color: var(--text-faint); text-decoration: none; display: inline-block; }
+    &.is-active { color: var(--text); text-decoration: none; font-weight: 700; border: 0; background: none; }
+  }
+  .post-grid { display: block; }
+  .post-card {
+    display: grid; grid-template-columns: 104px minmax(0, 1fr); column-gap: 14px;
+    padding: 10px 4px;
+    background: none; border: 0; border-bottom: 1px dashed var(--line-strong); box-shadow: none;
+    &::after { display: none; }
+    &__meta { grid-column: 1; grid-row: 1 / span 4; flex-direction: column; align-items: flex-start; gap: 4px; }
+    &__rt { display: none; }
+    > :not(.post-card__meta):not(.post-card__link) { grid-column: 2; }
+    &__title { margin: 0 0 2px; font-size: 1.08rem; color: var(--accent); text-decoration: underline; }
+    &__series { margin: 0 0 2px; }
+    &__excerpt { font-size: 0.9rem; -webkit-line-clamp: 2; }
+    .tag-list { margin-top: 4px; }
+    &:hover { transform: none; box-shadow: none; background: var(--accent-soft); border-color: var(--line-strong); .post-card__title { color: var(--accent-2); } }
+  }
+  .post-card__new {
+    margin-left: 6px; padding: 0 4px;
+    font-family: var(--font-ui); font-size: 0.7rem; font-style: normal; text-decoration: none; vertical-align: 0.2em;
+    color: #fff; background: #e01b1b;
+    display: inline-block; animation: blink 1s steps(1) infinite;
+  }
+
+  // ── Posts: a plain document ──
+  .post-head {
+    padding-top: 22px; padding-bottom: 10px;
+    text-align: center;
+    .post-meta, .tag-list { justify-content: center; }
+    &__title { margin: 12px auto 12px; padding-bottom: 12px; border-bottom: 3px double var(--line-strong); }
+  }
+  .post-cover { margin-bottom: 20px; }
+  .post-layout { display: block; }
+  .post-main { max-width: none; }
+  .post-aside { display: none; }
+  .toc-mobile:not([hidden]) { display: block; width: min(100%, 340px); margin: 0 0 24px; } // Contents box at the top
+  .series-box { box-shadow: none; }
+  .post-foot { margin-top: 36px; gap: 22px; }
+  .links-panel { background: none; border: 0; box-shadow: none; padding: 0; }
+  .pager {
+    display: flex; justify-content: space-between; gap: 16px;
+    padding-top: 10px; border-top: 3px double var(--line-strong);
+    &__item {
+      padding: 0; background: none; border: 0; box-shadow: none; transform: none !important;
+      strong { font-weight: 400; color: var(--accent); text-decoration: underline; }
+      .icon { display: none; }
+    }
+  }
+  .related__grid { display: block; }
+  .related__item {
+    display: list-item; list-style: square; margin-left: 1.3em; padding: 2px 0;
+    background: none; border: 0; box-shadow: none; transform: none !important;
+    .hud-label { margin-right: 8px; }
+    strong { font-weight: 400; color: var(--accent); text-decoration: underline; }
+  }
+}
+
+// ── One column on small screens ──
+@media (max-width: 760px) {
+  :root#{$s} {
+    body {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "banner" "marq" "nav" "tools" "main" "side" "foot";
+      grid-template-rows: none;
+      gap: 8px; padding: 8px;
+    }
+    .logo { padding: 34px 12px 14px; }
+    .logo__mark svg { width: 30px; height: 30px; }
+    .nav {
+      flex-direction: row; flex-wrap: wrap; gap: 2px 12px;
+      &__link::before { display: none; }
+    }
+    .header-actions { flex-wrap: nowrap; }
+    .search-trigger { flex: 1 1 auto; width: auto; height: 34px; }
+    .retro-side { grid-template-columns: 1fr 1fr; }
+    .retro-badges, .retro-uc { grid-column: 1 / -1; }
+    .retro-badges { grid-template-columns: repeat(4, 1fr); }
+    .container { padding-inline: 12px; }
+    .post-card { grid-template-columns: minmax(0, 1fr); &__meta { grid-row: auto; flex-direction: row; } > * { grid-column: 1 !important; } }
+  }
+}

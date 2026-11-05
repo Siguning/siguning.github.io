@@ -78,8 +78,8 @@
       if (on) count++;
     });
     statusEl.textContent = selected.length
-      ? "// " + count + " MATCH · " + mode.toUpperCase() + " · " + selected.map(function (t) { return "#" + t; }).join(" ")
-      : "// ALL " + rows.length + " POSTS";
+      ? count + " MATCH · " + mode.toUpperCase() + " · " + selected.map(function (t) { return "#" + t; }).join(" ")
+      : "ALL " + rows.length + " POSTS";
   }
 
   buttons.forEach(function (b) {

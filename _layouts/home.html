@@ -7,7 +7,8 @@ filters: true
 
 <section class="hero container">
   <div class="hero__copy">
-    <span class="hud-label reveal">// SYSTEM ONLINE · {{ site.tagline | upcase }}</span>
+    {%- capture chapter -%}CHAPTER {{ posts.size | prepend: '0' | slice: -2, 2 }}{%- endcapture %}
+    <span class="hud-label kicker reveal">{% include skin-text.html hud="SYSTEM ONLINE" valve=chapter backrooms="LEVEL 0 · NOCLIP DETECTED" %} · {{ site.tagline | upcase }}</span>
     <h1 class="hero__title reveal">
       {%- assign words = site.title | split: ' ' -%}
       <span class="glitch" data-text="{{ words | first }}">{{ words | first }}</span>
@@ -39,7 +40,7 @@ filters: true
 
 {%- if pinned.size > 0 %}
 <section class="container section">
-  <h2 class="section-title"><span class="hud-label">// PRIORITY</span>Pinned</h2>
+  <h2 class="section-title"><span class="hud-label kicker">{% include skin-text.html hud="PRIORITY" valve="BOOKMARKED" backrooms="DO NOT LOSE" %}</span>Pinned</h2>
   <div class="post-grid">
     {%- for post in pinned %}{% include post-card.html post=post %}{% endfor -%}
   </div>
@@ -48,7 +49,7 @@ filters: true
 
 <section class="container section" data-post-filter>
   <div class="section-head">
-    <h2 class="section-title"><span class="hud-label">// TRANSMISSIONS</span>Latest Posts</h2>
+    <h2 class="section-title"><span class="hud-label kicker">{% include skin-text.html hud="TRANSMISSIONS" valve="CHAPTERS" backrooms="FOUND LOGS" %}</span>Latest Posts</h2>
     <div class="chip-row" role="group" aria-label="Filter by category">
       <button class="chip is-active" type="button" data-filter-cat="">All <span class="chip__count">{{ posts.size }}</span></button>
       {%- assign cats = site.categories | sort -%}
@@ -63,7 +64,7 @@ filters: true
   <div class="post-grid" data-filter-list>
     {%- for post in posts %}{% include post-card.html post=post %}{% endfor -%}
   </div>
-  <p class="empty-state" data-filter-empty hidden>신호 없음 — 해당 조건의 글이 없습니다.</p>
+  <p class="empty-state" data-filter-empty hidden>{% include skin-text.html hud="신호 없음" valve="데이터 없음" backrooms="아무도 없다" %} — 해당 조건의 글이 없습니다.</p>
 </section>
 
 {{ content }}
