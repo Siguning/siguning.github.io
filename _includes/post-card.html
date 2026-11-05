@@ -2,12 +2,21 @@
 {%- assign p_cat = p.categories | first -%}
 <article class="post-card hud reveal" data-category="{{ p_cat }}" data-tags="{{ p.tags | join: ' ' | escape }}" style="--h: {{ p_cat | hue }}">
   <a class="post-card__link" href="{{ p.url | relative_url }}" aria-label="{{ p.title | escape }}"></a>
+  {%- if site.racury.skins contains 'valve' %}
+  {%- assign cat_info = site.data.categories[p_cat] %}
+  <div class="post-card__thumb" data-skin-only="valve" aria-hidden="true"{% if p.cover %} style="background-image: url('{{ p.cover | relative_url }}')"{% endif %}>
+    <b class="post-card__no">CHAPTER {{ p.number }}</b>
+    <i class="post-card__mark">{{ cat_info.name | default: p_cat }}</i>
+  </div>
+  {%- endif %}
   <header class="post-card__meta">
     {% include category-badge.html name=p_cat %}
     <time datetime="{{ p.date | date_to_xmlschema }}">{{ p.date | date: '%Y.%m.%d' }}</time>
     <span class="post-card__rt"><svg class="icon"><use href="#i-clock"/></svg>{% include reading-time.html content=p.content %}m</span>
   </header>
-  <h3 class="post-card__title">{% if p.pinned %}<span class="pin" title="Pinned">◆</span> {% endif %}{{ p.title }}</h3>
+  {%- assign newest = site.posts.size | minus: 3 -%}
+  <h3 class="post-card__title">{% if p.pinned %}<span class="pin" title="Pinned">◆</span> {% endif %}{{ p.title }}
+    {%- if site.racury.skins contains 'backrooms' and p.number > newest %} <em class="post-card__new" data-skin-only="backrooms">NEW!</em>{% endif %}</h3>
   {%- if p.series %}<p class="post-card__series"><svg class="icon"><use href="#i-layers"/></svg>{{ p.series }}{% if p.series_index %} · EP.{{ p.series_index }}{% endif %}</p>{% endif %}
   <p class="post-card__excerpt">{{ p.description | default: p.content | strip_html | normalize_whitespace | truncate: 150 }}</p>
   {% include tag-list.html tags=p.tags %}

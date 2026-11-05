@@ -79,6 +79,9 @@ module Racury
       @baseurl = site.config["baseurl"].to_s.chomp("/")
       posts = site.posts.docs.reject { |p| p.data["published"] == false }
 
+      # 1-based position by date ("chapter" number, shown by the valve skin).
+      posts.each_with_index { |post, i| post.data["number"] = i + 1 }
+
       index = build_index(posts)
       edges = Hash.new { |h, k| h[k] = [] }
 

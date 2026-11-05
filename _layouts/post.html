@@ -9,6 +9,9 @@ layout: default
       <a href="{{ '/categories/' | relative_url }}#{{ p_cat | uri_escape }}">{{ site.data.categories[p_cat].name | default: p_cat | upcase }}</a><span>/</span>
       <span aria-current="page">LOG-{{ page.date | date: '%y%m%d' }}</span>
     </nav>
+    {%- if site.racury.skins contains 'valve' %}
+    <p class="post-head__chapter" data-skin-only="valve">CHAPTER {{ page.number }}</p>
+    {%- endif %}
     <h1 class="post-head__title reveal">{{ page.title }}</h1>
     {%- if page.subtitle %}<p class="post-head__sub reveal">{{ page.subtitle }}</p>{% endif %}
     <div class="post-meta reveal">
@@ -74,13 +77,13 @@ layout: default
         <nav class="pager" aria-label="Previous and next post">
           {%- if page.previous %}
           <a class="pager__item hud" href="{{ page.previous.url | relative_url }}" rel="prev">
-            <span class="hud-label"><svg class="icon"><use href="#i-arrow-left"/></svg> PREV</span>
+            <span class="hud-label"><svg class="icon"><use href="#i-arrow-left"/></svg> {% include skin-text.html hud="PREV" valve="PREVIOUS" backrooms="« prev" %}</span>
             <strong>{{ page.previous.title }}</strong>
           </a>
           {%- else %}<span></span>{% endif %}
           {%- if page.next %}
           <a class="pager__item pager__item--next hud" href="{{ page.next.url | relative_url }}" rel="next">
-            <span class="hud-label">NEXT <svg class="icon"><use href="#i-arrow-right"/></svg></span>
+            <span class="hud-label">{% include skin-text.html hud="NEXT" valve="NEXT CHAPTER" backrooms="next »" %} <svg class="icon"><use href="#i-arrow-right"/></svg></span>
             <strong>{{ page.next.title }}</strong>
           </a>
           {%- endif %}

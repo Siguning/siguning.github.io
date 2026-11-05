@@ -5,7 +5,7 @@ $skins: hud, valve, backrooms;
 
 // Content that only exists in one skin: <x data-skin-only="backrooms">…</x> (see _includes/skin-text.html).
 // Inline skin text must not become its own flex item inside flex labels (.hud-label is inline-flex).
-span[data-skin-only] { display: contents; }
+span[data-skin-only]:not([class]) { display: contents; }
 @each $skin in $skins {
   :root:not([data-skin="#{$skin}"]) [data-skin-only="#{$skin}"] { display: none !important; }
 }

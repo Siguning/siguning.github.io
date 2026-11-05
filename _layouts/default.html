@@ -17,6 +17,9 @@
   <a class="skip-link" href="#main">본문으로 건너뛰기</a>
 
   {% include header.html %}
+  {%- if site.racury.skins contains 'backrooms' %}
+  {% include retro-side.html %}
+  {%- endif %}
 
   <main id="main" class="site-main">
     {{ content }}

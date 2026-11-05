@@ -6,9 +6,9 @@ switch between at runtime. Every skin has light and dark modes.
 
 | Skin id     | Look |
 |-------------|------|
-| `hud`       | Sci-fi cockpit HUD: chamfered translucent panels, corner brackets, starfield, blue hologram palette, glitch titles. |
-| `valve`     | Valve / Source-engine inspired: warm industrial concrete, amber holo-HUD accents, rounded HUD boxes, condensed type, "chapter title" headers. |
-| `backrooms` | Backrooms / late-90s homepage: yellow wallpaper, flickering fluorescent light, VHS grain and scanlines, camcorder REC overlay, Win9x bevelled windows, pixel font (Galmuri), marquee. Dark mode turns the lights off and the pointer becomes a flashlight. |
+| `hud`       | Sci-fi cockpit HUD. **Layout:** sticky top bar, hero with radar + stats, card grid, post with TOC/graph sidebar. **Look:** chamfered translucent panels, corner brackets, starfield, blue hologram palette, glitch titles. |
+| `valve`     | Valve / Source-engine inspired. **Layout:** a game main menu: fixed left rail (title, big stacked menu words, tools at the bottom), a full-height title screen with a text menu and HUD stat boxes, a "chapter select" grid of image tiles (posts numbered as chapters), posts open on a full-width chapter title card and "next chapter" leads the pager. **Look:** warm industrial concrete, amber accents, condensed type. |
+| `backrooms` | Backrooms + late-90s personal homepage. **Layout:** a centred fixed-width page on tiled wallpaper: banner window with a Netscape title bar, marquee, left column of small windows (Navigation, Tools, hit counter, last update, webring, 88×31 badges), a "What's New" post log with NEW! flags, and plain-document posts (Contents box, « prev / next » links, "see also" list). **Look:** yellow wallpaper, flickering fluorescent light, VHS grain, Win9x bevels, pixel font (Galmuri). Dark mode turns the lights off and the pointer becomes a flashlight. |
 
 ## Use it on another GitHub Pages site
 
@@ -101,11 +101,15 @@ permalink: /archive/
 
 ## Writing your own skin
 
-A skin is a Sass partial that overrides tokens under `:root[data-skin="name"]`:
+A skin is a pair of Sass partials under `:root[data-skin="name"]`: `_name.scss` for the look (tokens, colors, type)
+and `_name-layout.scss` for the structure. Layouts render the same semantic markup for every skin, so skins
+rearrange it with CSS (grid areas, `display: contents` to flatten wrappers, fixed positioning), which keeps
+runtime switching instant.
 
-1. Copy `_sass/skins/_valve.scss` to `_sass/skins/_myskin.scss`; change the color tokens (dark and light mixins),
-   fonts, the decoration tokens (`--kicker`, `--h2-mark`, `--hr-mark`, `--cut`, `--hue-shift`, …), and any rules.
-2. `@use "skins/myskin";` in `assets/css/main.scss`, and add the id to `$skins` in `_sass/_skins.scss`.
+1. Copy `_sass/skins/_valve.scss` and `_valve-layout.scss` to `_myskin.scss` / `_myskin-layout.scss`; change the
+   color tokens (dark and light mixins), fonts, decoration tokens (`--kicker`, `--h2-mark`, `--hr-mark`, `--cut`,
+   `--hue-shift`, …) and the layout rules.
+2. `@use` both in `assets/css/main.scss`, and add the id to `$skins` in `_sass/_skins.scss`.
 3. Add the id to `Racury::SKINS` in `lib/jekyll-theme-racury.rb`, a label in `_includes/skin-switcher.html`, swatch
    colors in `_sass/_skins.scss`, and its web fonts in `_includes/head.html`.
 

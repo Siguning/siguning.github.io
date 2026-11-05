@@ -191,6 +191,24 @@
   onScroll();
   if (toTop) toTop.addEventListener("click", function () { window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }); });
 
+  // Height covered by a sticky top header (0 when a skin turns it into a side rail or inline block).
+  function topOffset() {
+    if (!header) return 0;
+    var r = header.getBoundingClientRect();
+    return getComputedStyle(header).position === "sticky" && r.width > window.innerWidth / 2 ? r.height : 0;
+  }
+
+  // "random" link (backrooms webring): jump to a random post from the search index.
+  $$("[data-random-post]").forEach(function (a) {
+    a.addEventListener("click", function (e) {
+      e.preventDefault();
+      fetch(window.SITE.search).then(function (res) { return res.json(); }).then(function (docs) {
+        var others = docs.filter(function (d) { return d.url !== location.pathname; });
+        if (others.length) location.href = others[Math.floor(Math.random() * others.length)].url;
+      }).catch(function () {});
+    });
+  });
+
   // ───── Scroll reveal with stagger ─────
   var reveals = $$(".reveal");
   if ("IntersectionObserver" in window && !reduceMotion) {
@@ -381,7 +399,7 @@
     var links = $$("[data-toc-id]");
     var active = -1;
     function spy() {
-      var y = (header ? header.offsetHeight : 0) + 40;
+      var y = topOffset() + 40;
       var idx = 0;
       for (var i = 0; i < heads.length; i++) {
         if (heads[i].getBoundingClientRect().top - y <= 0) idx = i; else break;
